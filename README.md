@@ -3,7 +3,7 @@
 Добавляет кнопку загрузки для каждой музыкальной записи в любом месте (стена, плеер и т.д.).
 Никакой рекламы, никаких трекеров и шпионов, открытый исходный код.
 
-<a href="#">Скачать в Chrome store</a>
+<a href="https://chrome.google.com/webstore/detail/vkobserver/piiadkppcjhcjnekceedinjidaeliabd">Скачать в Chrome store</a>
 
 ###В текущей версии:
 
