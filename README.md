@@ -14,5 +14,5 @@
 * загрузка видео и фотографий
 
 ###Скриншоты:
-![Screenshot0](http://lite.glebcha.ru/img/vkobserver.png)
+![Screenshot0](http://lite.glebcha.ru/img/vkobserver-new.png)
 
