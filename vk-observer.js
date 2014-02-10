@@ -16,6 +16,10 @@ var vkMusic = {
                     d.className = 'download-link';
                     d.href = getLink;
                     d.setAttribute('download', audioTitle);
+                    d.addEventListener('click',
+                        function(event){
+                            event.stopPropagation();
+                        }, false);
                     btn.appendChild(d);
                     (function(audioBlock) {
                         audioBlock.addEventListener('mouseover', function (event) {
