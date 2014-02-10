@@ -8,19 +8,22 @@ var vkMusic = {
                 if (!btn.querySelector('.download-link')) {
                     var getLink = btn.parentNode.lastElementChild.value.split('?').splice(0, 1).toString();
                     var audioTitle = audioBlock.querySelector('.title_wrap.fl_l .title').innerText;
+                    var audioDurationBlock = audioBlock.querySelector('.duration')
+                    var audioDurationText = audioDurationBlock.innerText.split(':');
+                    var audioDurationSeconds = audioDurationText[0] * 60 + +audioDurationText[1];
+                    audioDurationBlock.setAttribute('data-duration', audioDurationSeconds);
                     var d = document.createElement('a');
                     d.className = 'download-link';
                     d.href = getLink;
                     d.setAttribute('download', audioTitle);
                     btn.appendChild(d);
-                    audioBlock.querySelector('.play_new').addEventListener('click', function (event) {
+                    audioBlock.addEventListener('mouseover', function (event) {
                         event.preventDefault;
                         var playBtn = event.target;
                         var audioContainer = playBtn.parentNode.parentNode.parentNode.parentNode;
                         var linkBtn = audioContainer.querySelector('.play_btn_wrap');
                         var audioLink = linkBtn.parentNode.lastElementChild.value.split('?').splice(0, 1).toString();
-                        var audioDuration = audioContainer.querySelector('.duration').innerText.split(':');
-                        var audioDurationSeconds = audioDuration[0] * 60 + +audioDuration[1];
+                        var audioDurationSeconds = audioContainer.querySelector('.duration').dataset.duration;
                         var bitRate = function (callback) {
                             var xmlhttp = new XMLHttpRequest();
                             xmlhttp.overrideMimeType('text/xml');
