@@ -17,40 +17,42 @@ var vkMusic = {
                     d.href = getLink;
                     d.setAttribute('download', audioTitle);
                     btn.appendChild(d);
-                    audioBlock.addEventListener('mouseover', function (event) {
-                        event.preventDefault;
-                        var playBtn = event.target;
-                        var audioContainer = playBtn.parentNode.parentNode.parentNode.parentNode;
-                        var linkBtn = audioContainer.querySelector('.play_btn_wrap');
-                        var audioLink = linkBtn.parentNode.lastElementChild.value.split('?').splice(0, 1).toString();
-                        var audioDurationSeconds = audioContainer.querySelector('.duration').dataset.duration;
-                        var bitRate = function (callback) {
-                            var xmlhttp = new XMLHttpRequest();
-                            xmlhttp.overrideMimeType('text/xml');
+                    (function(audioBlock) {
+                        audioBlock.addEventListener('mouseover', function (event) {
+                            event.preventDefault();
+                            var playBtn = event.target;
+                            var audioContainer = playBtn.parentNode.parentNode.parentNode.parentNode;
+                            var linkBtn = audioContainer.querySelector('.play_btn_wrap');
+                            var audioLink = linkBtn.parentNode.lastElementChild.value.split('?').splice(0, 1).toString();
+                            var audioDurationSeconds = audioContainer.querySelector('.duration').dataset.duration;
+                            var bitRate = function (callback) {
+                                var xmlhttp = new XMLHttpRequest();
+                                xmlhttp.overrideMimeType('text/xml');
 
-                            xmlhttp.onreadystatechange = function () {
-                                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                                    var size = xmlhttp.getResponseHeader('Content-Length');
-                                    var kbit = size / 128;
-                                    kbps = Math.ceil(Math.round(kbit / audioDurationSeconds) / 16) * 16;
-                                    callback(kbps);
-                                }
+                                xmlhttp.onreadystatechange = function () {
+                                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                                        var size = xmlhttp.getResponseHeader('Content-Length');
+                                        var kbit = size / 128;
+                                        kbps = Math.ceil(Math.round(kbit / audioDurationSeconds) / 16) * 16;
+                                        callback(kbps);
+                                    }
+                                };
+                                xmlhttp.open("HEAD", audioLink, true);
+                                xmlhttp.send();
                             };
-                            xmlhttp.open("GET", audioLink, true);
-                            xmlhttp.send();
-                        };
-                        bitRate(
-                            function (response) {
-                                if (!audioContainer.querySelector('.bitrate')) {
-                                    var text = response + ' кбит/с';
-                                    var b = document.createElement('span');
-                                    b.className = 'bitrate';
-                                    b.innerText = text.replace('-', '');
-                                    audioContainer.appendChild(b);
+                            bitRate(
+                                function (response) {
+                                    if (!audioContainer.querySelector('.bitrate')) {
+                                        var text = response + ' кбит/с';
+                                        var b = document.createElement('span');
+                                        b.className = 'bitrate';
+                                        b.innerText = text.replace('-', '');
+                                        audioContainer.appendChild(b);
+                                    }
                                 }
-                            }
-                        );
-                    }, false);
+                            );
+                        }, false);
+                    })(audioBlock);
                 }
             }
         }
