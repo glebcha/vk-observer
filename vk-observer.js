@@ -17,11 +17,11 @@ var vkMusic = {
                     d.href = getLink;
                     d.setAttribute('download', audioTitle);
                     d.addEventListener('click',
-                        function(event){
+                        function (event) {
                             event.stopPropagation();
                         }, false);
                     btn.appendChild(d);
-                    (function(audioBlock) {
+                    (function (audioBlock) {
                         audioBlock.addEventListener('mouseover', function (event) {
                             event.preventDefault();
                             var playBtn = event.target;
@@ -63,6 +63,37 @@ var vkMusic = {
 
     },
 
+    downloadAll: function (posts) {
+
+        var posts = posts || document.querySelectorAll('.post');
+
+        for (var i = 0; i < posts.length; i++) {
+            var post = posts[i];
+            if (post !== undefined && post !== null) {
+                if (post.querySelectorAll('.audio').length > 1) {
+                    var btn = document.createElement('a');
+                    btn.href = '#';
+                    btn.className = 'download-all-link';
+                    btn.innerText = 'Загрузить все';
+                    btn.addEventListener('click',
+                        function (event) {
+                            event.preventDefault();
+                            var item = event.target.parentNode;
+                            console.log(item);
+                            for (var z = 0; z < item.querySelectorAll('.audio').length; z++) {
+                                var ev = document.createEvent("MouseEvents");
+                                ev.initMouseEvent("click", true, false, self, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                                item.querySelectorAll('.download-link')[z].dispatchEvent(ev);
+                            }
+                        }, false);
+                    if (!post.querySelector('.download-all-link')) {
+                        post.querySelector('.wall_text').appendChild(btn);
+                    }
+                }
+            }
+        }
+    },
+
     pageMusic: function () {
         var page = document.querySelector('#page_body.fl_r');
         var pageConfig = {
@@ -76,7 +107,13 @@ var vkMusic = {
                     var node = mutation.target;
                     var audios = node.querySelectorAll('.audio');
                     vkMusic.showLinks(audios);
+                    var blocks = node.querySelectorAll('.post');
+
+                    vkMusic.downloadAll(blocks);
+
+
                 });
+
             });
 
         pageObserver.observe(page, pageConfig);
@@ -108,7 +145,6 @@ var vkMusic = {
                         };
                         playlistObserver.observe(playlist, playlistConfig);
                     }
-
                 });
             });
 
@@ -116,5 +152,6 @@ var vkMusic = {
     }
 };
 vkMusic.showLinks();
+vkMusic.downloadAll();
 vkMusic.pageMusic();
 vkMusic.bodyMusic();
