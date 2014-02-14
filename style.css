@@ -1,13 +1,18 @@
 .download-link {
-background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowMzhDNkYxQzdDQ0ZFMjExQUU0MUI1NTYxMUM4NjlDMiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpEM0UwMUIzM0U0REQxMUUyOTJGOEUwRjE5MUQyODAyRSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpEM0UwMUIzMkU0REQxMUUyOTJGOEUwRjE5MUQyODAyRSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M2IChXaW5kb3dzKSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjUzNDcwQUExQ0VFNEUyMTE4MERGQTg2OTYxODA5OUUzIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjAzOEM2RjFDN0NDRkUyMTFBRTQxQjU1NjExQzg2OUMyIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+2O9qxwAAAP1JREFUeNpiTFpxkYESwATEnkD8DIj/k4CfQfUxsPz/928ukJYk0WKQepA+KZZ/f/9Kkul6sD6Wf//+YpVdFGcGZ8ctOoXTFJALCFqFTw3L/79/CBqATw3QBX+IcAE+A/4QYQAeNYwhE7f+RxaYleTEIMjDgaHww9cfDKlz92HoZwKZjoz7t51h+PP3H6oL/v0Hi6OrBWEmkP+Q8eWHrxiWHriMYsCyQ1cYLj14xYCuFoSxxsL60zcZlCUFGGy05BlO3X7KsO7EdYb/pKaDSVtOMbAxMzFM2HwS6CXc6YDRu2nxMzLyAgi8AOkDJeUUaMaQIEHzUyBOAzEAAgwA1SelQ7DpKVAAAAAASUVORK5CYII=');
-width: 20px;
-height: 20px;
+background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAMxJREFUeNpi1I6oYsACbIC4EYjrgfgIuiQTA3agCMROUJqBWE3/0GiiNL1Eo1EACxrfGGq6OpQPot9CDT+LSxPI895A/BfKnwjEzEC8FYh9cDmvBqqBGcpnhvJr8PnpAhBnoollQsVRNCkBsQSS2Gwg3g9l74fyYQCkTgmk6RwQV6KZ7gXE/VAaGYDUnQMFBD8Q+wPxK6jNjED8EYjPA3E6VP4/NFRB6vhBmr4BsTwQtzAQB76BNK0CYimkEPsPtY0RyobxGaAh+QwgwAByCyhkqLb69QAAAABJRU5ErkJggg==');
+width: 13px;
+height: 13px;
 position: absolute;
-top: 5px;
-right: 27px;
+right: 33px;
+top: 9px;
+opacity: 0.4;
 z-index: 100;
 background-repeat: no-repeat;
 }
+
+.download-link:hover {
+	opacity: 1;
+} 
 
 .download-all-link {
 display: block;
@@ -30,10 +35,15 @@ position: absolute;
 right: 52px;
 top: 5px;
 color: #2B587A;
-background-color: #e1e7ed;
-text-shadow: 0px 0px 10px #FFF;
+background-color: #EDF1F5;
 padding: 3px;
-border-radius: 4px;
 z-index: 100;
 }
 
+#audio.new .audio_edit_wrap, #audio.new .audio_add_wrap, #audio.new .audio_remove_wrap {
+margin: 6px 6px 6px 76px !important;
+}
+
+#audio.new .audio .title_wrap {
+width: 250px !important;
+}
