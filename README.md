@@ -17,4 +17,5 @@
 
 ###Скриншоты:
 ![Screenshot0](http://lite.glebcha.ru/img/vkobserver-new.png)
+![Screenshot1](http://lite.glebcha.ru/img/vkobserver-new-1.png)
 
