@@ -9,6 +9,22 @@ z-index: 100;
 background-repeat: no-repeat;
 }
 
+.download-all-link {
+display: block;
+color: #2B587A;
+opacity: .7;
+text-align: right;
+margin: 0 7px 7px 0;
+padding-right: 15px;
+background: url(/images/icons/mono_iconset.gif?8) no-repeat 0px -222px;
+background-position-x: 100%;
+}
+
+.download-all-link:hover {
+opacity: 1;
+text-decoration: none;
+}
+
 .bitrate {
 position: absolute;
 right: 52px;
