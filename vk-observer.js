@@ -69,8 +69,9 @@ var vkMusic = {
 
         for (var i = 0; i < posts.length; i++) {
             var post = posts[i];
+            var wallText = post.querySelector('.wall_text');
             if (post !== undefined && post !== null) {
-                if (post.querySelectorAll('.audio').length > 1) {
+                if (wallText.querySelectorAll('.audio').length > 1) {
                     var btn = document.createElement('a');
                     btn.href = '#';
                     btn.className = 'download-all-link';
@@ -79,7 +80,6 @@ var vkMusic = {
                         function (event) {
                             event.preventDefault();
                             var item = event.target.parentNode;
-                            console.log(item);
                             for (var z = 0; z < item.querySelectorAll('.audio').length; z++) {
                                 var ev = document.createEvent("MouseEvents");
                                 ev.initMouseEvent("click", true, false, self, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
@@ -87,7 +87,7 @@ var vkMusic = {
                             }
                         }, false);
                     if (!post.querySelector('.download-all-link')) {
-                        post.querySelector('.wall_text').appendChild(btn);
+                        wallText.appendChild(btn);
                     }
                 }
             }
