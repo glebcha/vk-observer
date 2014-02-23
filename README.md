@@ -17,4 +17,6 @@
 ![Screenshot0](http://lite.glebcha.ru/img/vkobserver-styled.png)
 * * *
 ![Screenshot1](http://lite.glebcha.ru/img/vkobserver-styled-1.png)
+* * *
+![Screenshot1](http://lite.glebcha.ru/img/vkobserver-styled-2.png)
 
