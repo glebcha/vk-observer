@@ -47,3 +47,9 @@ margin: 6px 6px 6px 76px !important;
 #audio.new .audio .title_wrap {
 width: 250px !important;
 }
+
+#pad_playlist > .bitrate,
+#pad_playlist_panel > .bitrate,
+tr > .bitrate {
+	display: none;
+}
