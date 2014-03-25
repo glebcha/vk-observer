@@ -37,7 +37,10 @@ var vkMusic = {
                                     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                                         var size = xmlhttp.getResponseHeader('Content-Length');
                                         var kbit = size / 128;
-                                        kbps = Math.ceil(Math.round(kbit / audioDurationSeconds) / 16) * 16;
+                                        var kbps = Math.ceil(Math.round(kbit / audioDurationSeconds) / 16) * 16;
+                                        if(kbps > 320) {
+                                            kbps = 320;
+                                        }
                                         callback(kbps);
                                     }
                                 };
@@ -47,7 +50,11 @@ var vkMusic = {
                             bitRate(
                                 function (response) {
                                     if (!audioContainer.querySelector('.bitrate')) {
-                                        var text = response + ' кбит/с';
+                                        if(isNaN(response) === true) {
+                                            var text = '×';
+                                        }else{
+                                            var text = response + ' кбит/с';
+                                        }
                                         var b = document.createElement('span');
                                         b.className = 'bitrate';
                                         b.innerText = text.replace('-', '');
@@ -75,7 +82,7 @@ var vkMusic = {
                     var btn = document.createElement('a');
                     btn.href = '#';
                     btn.className = 'download-all-link';
-                    btn.innerText = 'Загрузить все';
+                    btn.innerHTML = 'Загрузить все<span class="download-tooltip">Нажмите, чтобы загрузить все аудиозаписи</span>';
                     btn.addEventListener('click',
                         function (event) {
                             event.preventDefault();
