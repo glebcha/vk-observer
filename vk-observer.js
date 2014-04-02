@@ -13,13 +13,20 @@ var vkMusic = {
                     var audioDurationSeconds = audioDurationText[0] * 60 + +audioDurationText[1];
                     audioDurationBlock.setAttribute('data-duration', audioDurationSeconds);
                     var d = document.createElement('a');
+                    var downloadData = 'audio/mpeg:' + audioTitle + '.mp3:' + getLink;
                     d.className = 'download-link';
                     d.href = getLink;
                     d.setAttribute('download', audioTitle);
+                    d.setAttribute('data-download', downloadData);
                     d.addEventListener('click',
                         function (event) {
                             event.stopPropagation();
                         }, false);
+                    d.addEventListener('dragstart', function(e) {
+                        if (this.dataset) {
+                            e.dataTransfer.setData('DownloadURL', this.dataset.download);
+                        }     
+                    }, false);
                     btn.appendChild(d);
                     (function (audioBlock) {
                         audioBlock.addEventListener('mouseover', function (event) {
@@ -93,6 +100,7 @@ var vkMusic = {
                                 item.querySelectorAll('.download-link')[z].dispatchEvent(ev);
                             }
                         }, false);
+                    //TODO: Deal with multi-download
                     if (!post.querySelector('.download-all-link')) {
                         wallText.appendChild(btn);
                     }
