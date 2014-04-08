@@ -13,7 +13,7 @@ var vkMusic = {
                     var audioDurationSeconds = audioDurationText[0] * 60 + +audioDurationText[1];
                     audioDurationBlock.setAttribute('data-duration', audioDurationSeconds);
                     var d = document.createElement('a');
-                    var downloadData = 'audio/mpeg:' + audioTitle + '.mp3:' + getLink;
+                    var downloadData = 'audio/mpeg3:' + audioTitle + '.mp3:' + getLink;
                     d.className = 'download-link';
                     d.href = getLink;
                     d.setAttribute('download', audioTitle);
@@ -22,9 +22,11 @@ var vkMusic = {
                         function (event) {
                             event.stopPropagation();
                         }, false);
-                    d.addEventListener('dragstart', function(e) {
-                        if (this.dataset) {
-                            e.dataTransfer.setData('DownloadURL', this.dataset.download);
+                    audioBlock.setAttribute('draggable', 'true');
+                    audioBlock.addEventListener('dragstart', function(e) {
+                        var downloadLink = this.querySelector('.download-link');
+                        if (downloadLink.dataset) {
+                            e.dataTransfer.setData('DownloadURL', downloadLink.dataset.download);
                         }     
                     }, false);
                     btn.appendChild(d);
