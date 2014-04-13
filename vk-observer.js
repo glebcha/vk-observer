@@ -182,7 +182,7 @@ var vkObserver = {
                                         var html5 = videoBox.querySelector('video');
                                         var embed = videoBox.querySelector('embed');
                                         if (html5) {
-                                            var sourceString = html5.getAttribute('src').split(reg).splice(0, 1).toString() + 'mp4';
+                                            var sourceString = html5.getAttribute('src');
                                             var videoDownload = document.createElement('a');
                                             videoDownload.className = 'html5-video';
                                             videoDownload.href = sourceString;
