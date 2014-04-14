@@ -2,7 +2,7 @@ var vkObserver = {
     showAudioLinks: function(audios) {
         var audioBlocks = audios || document.querySelectorAll('.audio');
         if (audioBlocks.length > 0) {
-            for (i = 0; i < audioBlocks.length; i++) {
+            for (var i = 0; i < audioBlocks.length; i++) {
                 var audioBlock = audioBlocks[i];
                 var btn = audioBlock.querySelector('.play_btn_wrap');
                 if (!btn.querySelector('.download-link')) {
@@ -219,7 +219,7 @@ var vkObserver = {
                                                             if (a.indexOf(q) > 0) {
                                                                 newArr.push(a);
                                                                 break;
-                                                            };
+                                                            }
                                                         }
                                                     }
                                                     return newArr;
@@ -231,8 +231,6 @@ var vkObserver = {
                                                 uArr.innerHTML = htmlUrls.join('');
                                                 el.appendChild(uArr);
 
-                                                //console.log(sideBar);
-                                                //console.log(htmlUrls);
                                             }
                                         }
                                     }
