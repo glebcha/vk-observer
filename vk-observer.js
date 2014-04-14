@@ -1,6 +1,57 @@
 var vkObserver = {
     showAudioLinks: function(audios) {
         var audioBlocks = audios || document.querySelectorAll('.audio');
+        var dragDownload = function(e) {
+            var downloadLink = this.querySelector('.download-link');
+            if (downloadLink.dataset) {
+                e.dataTransfer.setData('DownloadURL', downloadLink.dataset.download);
+            }
+        };
+        var noBubbling = function(event) {
+            event.stopPropagation();
+        };
+        var displayBitrate = function(event) {
+            event.preventDefault();
+            var playBtn = event.target;
+            var audioContainer = playBtn.parentNode.parentNode.parentNode.parentNode;
+            var linkBtn = audioContainer.querySelector('.play_btn_wrap');
+            var audioLink = linkBtn.parentNode.lastElementChild.value.split('?').splice(0, 1).toString();
+            var audioDurationSeconds = audioContainer.querySelector('.duration').dataset.duration;
+            var bitRate = function(callback) {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.overrideMimeType('text/xml');
+
+                xmlhttp.onreadystatechange = function() {
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                        var size = xmlhttp.getResponseHeader('Content-Length');
+                        var kbit = size / 128;
+                        var kbps = Math.ceil(Math.round(kbit / audioDurationSeconds) / 16) * 16;
+                        if (kbps > 320) {
+                            kbps = 320;
+                        }
+                        callback(kbps);
+                    }
+                };
+                xmlhttp.open("HEAD", audioLink, true);
+                xmlhttp.send();
+            };
+            bitRate(
+
+                function(response) {
+                    if (!audioContainer.querySelector('.bitrate')) {
+                        var text;
+                        if (isNaN(response) === true) {
+                            text = '×';
+                        } else {
+                            text = response + ' кбит/с';
+                        }
+                        var b = document.createElement('span');
+                        b.className = 'bitrate';
+                        b.innerText = text.replace('-', '');
+                        audioContainer.appendChild(b);
+                    }
+                });
+        };
         if (audioBlocks.length > 0) {
             for (var i = 0; i < audioBlocks.length; i++) {
                 var audioBlock = audioBlocks[i];
@@ -20,63 +71,11 @@ var vkObserver = {
                     d.href = getLink;
                     d.setAttribute('download', audioFullName);
                     d.setAttribute('data-download', downloadData);
-                    d.addEventListener('click',
-
-                        function(event) {
-                            event.stopPropagation();
-                        }, false);
+                    d.addEventListener('click', noBubbling, false);
                     audioBlock.setAttribute('draggable', 'true');
-                    audioBlock.addEventListener('dragstart', function(e) {
-                        var downloadLink = this.querySelector('.download-link');
-                        if (downloadLink.dataset) {
-                            e.dataTransfer.setData('DownloadURL', downloadLink.dataset.download);
-                        }
-                    }, false);
+                    audioBlock.addEventListener('dragstart', dragDownload, false);
                     btn.appendChild(d);
-                    (function(audioBlock) {
-                        audioBlock.addEventListener('mouseover', function(event) {
-                            event.preventDefault();
-                            var playBtn = event.target;
-                            var audioContainer = playBtn.parentNode.parentNode.parentNode.parentNode;
-                            var linkBtn = audioContainer.querySelector('.play_btn_wrap');
-                            var audioLink = linkBtn.parentNode.lastElementChild.value.split('?').splice(0, 1).toString();
-                            var audioDurationSeconds = audioContainer.querySelector('.duration').dataset.duration;
-                            var bitRate = function(callback) {
-                                var xmlhttp = new XMLHttpRequest();
-                                xmlhttp.overrideMimeType('text/xml');
-
-                                xmlhttp.onreadystatechange = function() {
-                                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                                        var size = xmlhttp.getResponseHeader('Content-Length');
-                                        var kbit = size / 128;
-                                        var kbps = Math.ceil(Math.round(kbit / audioDurationSeconds) / 16) * 16;
-                                        if (kbps > 320) {
-                                            kbps = 320;
-                                        }
-                                        callback(kbps);
-                                    }
-                                };
-                                xmlhttp.open("HEAD", audioLink, true);
-                                xmlhttp.send();
-                            };
-                            bitRate(
-
-                                function(response) {
-                                    if (!audioContainer.querySelector('.bitrate')) {
-                                        var text;
-                                        if (isNaN(response) === true) {
-                                            text = '×';
-                                        } else {
-                                            text = response + ' кбит/с';
-                                        }
-                                        var b = document.createElement('span');
-                                        b.className = 'bitrate';
-                                        b.innerText = text.replace('-', '');
-                                        audioContainer.appendChild(b);
-                                    }
-                                });
-                        }, false);
-                    })(audioBlock);
+                    audioBlock.addEventListener('mouseover', displayBitrate, false);
                 }
             }
         }
@@ -86,6 +85,15 @@ var vkObserver = {
     downloadAll: function(entries) {
 
         var posts = entries || document.querySelectorAll('.post');
+        var getAllAudios = function(event) {
+            event.preventDefault();
+            var item = event.target.parentNode;
+            for (var z = 0; z < item.querySelectorAll('.audio').length; z++) {
+                var ev = document.createEvent("MouseEvents");
+                ev.initMouseEvent("click", true, false, self, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+                item.querySelectorAll('.download-link')[z].dispatchEvent(ev);
+            }
+        };
 
         for (var i = 0; i < posts.length; i++) {
             var post = posts[i];
@@ -96,17 +104,7 @@ var vkObserver = {
                     btn.href = '#';
                     btn.className = 'download-all-link';
                     btn.innerHTML = 'Загрузить все<span class="download-tooltip">Нажмите, чтобы загрузить все аудиозаписи</span>';
-                    btn.addEventListener('click',
-
-                        function(event) {
-                            event.preventDefault();
-                            var item = event.target.parentNode;
-                            for (var z = 0; z < item.querySelectorAll('.audio').length; z++) {
-                                var ev = document.createEvent("MouseEvents");
-                                ev.initMouseEvent("click", true, false, self, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-                                item.querySelectorAll('.download-link')[z].dispatchEvent(ev);
-                            }
-                        }, false);
+                    btn.addEventListener('click', getAllAudios, false);
                     //TODO: Deal with multi-download
                     if (!post.querySelector('.download-all-link')) {
                         wallText.appendChild(btn);
