@@ -15,7 +15,7 @@ var vkObserver = {
             var playBtn = event.target;
             var audioContainer = playBtn.parentNode.parentNode.parentNode.parentNode;
             var linkBtn = audioContainer.querySelector('.play_btn_wrap');
-            var audioLink = linkBtn.parentNode.lastElementChild.value.split('?').splice(0, 1).toString();
+            var audioLink = linkBtn.parentNode.querySelector('input').value.split('?').splice(0, 1).toString();
             var audioDurationSeconds = audioContainer.querySelector('.duration').dataset.duration;
             var bitRate = function(callback) {
                 var xmlhttp = new XMLHttpRequest();
@@ -36,7 +36,6 @@ var vkObserver = {
                 xmlhttp.send();
             };
             bitRate(
-
                 function(response) {
                     if (!audioContainer.querySelector('.bitrate')) {
                         var text;
@@ -57,7 +56,7 @@ var vkObserver = {
                 var audioBlock = audioBlocks[i];
                 var btn = audioBlock.querySelector('.play_btn_wrap');
                 if (!btn.querySelector('.download-link')) {
-                    var getLink = btn.parentNode.lastElementChild.value.split('?').splice(0, 1).toString();
+                    var getLink = btn.parentNode.querySelector('input').value.split('?').splice(0, 1).toString();
                     var audioTitle = audioBlock.querySelector('.title_wrap.fl_l .title').innerText;
                     var audioArtist = audioBlock.querySelector('.title_wrap.fl_l').firstElementChild.firstElementChild.innerText;
                     var audioFullName = audioArtist + "-" + audioTitle;
