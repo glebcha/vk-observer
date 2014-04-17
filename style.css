@@ -128,6 +128,7 @@ margin: 0 3px;
 #audios_list > .bitrate,
 #pad_playlist > .bitrate,
 #pad_playlist_panel > .bitrate,
+.pad_audio_table > tbody > tr > .bitrate,
 .audio_table > tbody > tr > .bitrate,
 #pad_search_list > .bitrate {
 	display: none;
