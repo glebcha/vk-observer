@@ -179,7 +179,7 @@ var vkObserver = {
                                         var html5 = videoBox.querySelector('video');
                                         var embed = videoBox.querySelector('embed');
                                         if (html5) {
-                                            var sourceString = html5.getAttribute('src');
+                                            var sourceString = html5.getAttribute('src').split('mp4').slice(0, 1).toString() + "mp4";
                                             var videoDownload = document.createElement('a');
                                             videoDownload.className = 'html5-video';
                                             videoDownload.href = sourceString;
@@ -247,7 +247,7 @@ var vkObserver = {
                                 mutations.forEach(function(mutation) {
                                     var node = mutation.target;
                                     var audios = node.querySelectorAll('.audio');
-                                    vkObserver.showAudioLinks(audios);
+                                    vkMusic.showLinks(audios);
                                 });
                             });
                         var playlistConfig = {
