@@ -1,4 +1,17 @@
 var vkObserver = {
+    syncStorage: function() {
+        var storage = chrome.storage.sync;
+        storage.get('cache', function(data) {
+            var storVal = data.cache;
+            if (storVal == 'enabled' || storVal == undefined) {
+                localStorage['VkObserver_cache'] = 'enabled';
+            }
+            if (storVal == 'disabled') {
+                localStorage['VkObserver_cache'] = 'disabled';
+            }
+        });
+    },
+
     showAudioLinks: function(audios) {
         var audioBlocks = audios || document.querySelectorAll('.audio');
         var dragDownload = function(e) {
@@ -9,6 +22,51 @@ var vkObserver = {
         };
         var noBubbling = function(event) {
             event.stopPropagation();
+        };
+
+        var getblob = function(event) {
+            var el = event.target;
+            var wrap = el.parentNode;
+            var url = el.href;
+            var downloadBtn = wrap.querySelector('.download-link');
+            var cacheStatus = localStorage['VkObserver_cache'];
+            if (cacheStatus == 'enabled') {
+                event.preventDefault();
+                event.stopPropagation();
+                var winUrl = window.URL || window.webkitURL;
+                var xhr = new XMLHttpRequest();
+                xhr.responseType = 'blob';
+                downloadBtn.style.display = 'none';
+                var statusBlock = document.createElement('span');
+                statusBlock.className = 'cached-status';
+                wrap.appendChild(statusBlock);
+                xhr.onprogress = function(completion) {
+                    var cachedCompletion = Math.floor(completion.loaded / completion.total * 100);
+                    var cachedPercent = cachedCompletion + '%';
+                    statusBlock.innerHTML = '';
+                    statusBlock.innerHTML = cachedPercent;
+                    if (cachedPercent == '100%') {
+                        statusBlock.remove();
+                        downloadBtn.style.display = 'block';
+                    }
+
+                }
+                xhr.onreadystatechange = function(response) {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        var blob = new window.Blob([this.response], {
+                            'type': 'audio/mpeg'
+                        });
+                        var link = winUrl.createObjectURL(blob);
+                        el.href = link;
+                        winUrl.revokeObjectURL(blob);
+                        el.click();
+                        el.removeEventListener('click', getblob, false);
+                    }
+                }
+                xhr.open('GET', url, true);
+                xhr.send(null);
+            } else {}
+
         };
         var displayBitrate = function(event) {
             event.preventDefault();
@@ -66,12 +124,11 @@ var vkObserver = {
                     var audioDurationSeconds = audioDurationText[0] * 60 + parseInt(audioDurationText[1], 10);
                     audioDurationBlock.setAttribute('data-duration', audioDurationSeconds);
                     var d = document.createElement('a');
-                    var downloadData = 'audio/mpeg:' + audioFullName + '.mp3:' + getLink;
                     d.className = 'download-link';
                     d.href = getLink;
                     d.setAttribute('download', audioFullName);
-                    d.setAttribute('data-download', downloadData);
                     d.addEventListener('click', noBubbling, false);
+                    d.addEventListener('click', getblob, false); //before hover cursor not pointer and opacity 0.7, after - cursor pointer/opacity 1/animation
                     audioBlock.setAttribute('draggable', 'true');
                     audioBlock.addEventListener('dragstart', dragDownload, false);
                     btn.appendChild(d);
@@ -180,7 +237,7 @@ var vkObserver = {
                                         var html5 = videoBox.querySelector('video');
                                         var embed = videoBox.querySelector('embed');
                                         if (html5) {
-                                            var sourceString = html5.getAttribute('src');
+                                            var sourceString = html5.getAttribute('src').split('mp4').slice(0, 1).toString() + "mp4";
                                             var videoDownload = document.createElement('a');
                                             videoDownload.className = 'html5-video';
                                             videoDownload.href = sourceString;
@@ -188,7 +245,7 @@ var vkObserver = {
                                             videoDownload.innerText = 'Загрузить видео';
                                             el.appendChild(videoDownload);
                                             //TODO: Find video quality buttons inner text
-                                            console.log(sourceString);
+                                            //console.log(sourceString);
                                             //TODO: Create elements for all urls and push them to video links list
                                         } else {
                                             if (!embed) {
@@ -265,6 +322,8 @@ var vkObserver = {
         bodyObserver.observe(body, bodyConfig);
     }
 };
+
+vkObserver.syncStorage();
 vkObserver.showAudioLinks();
 vkObserver.downloadAll();
 vkObserver.pageMusic();
