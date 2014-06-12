@@ -123,6 +123,17 @@ display: inline-block;
 margin: 0 3px;
 }
 
+.cached-status {
+position: absolute;
+right: 0px;
+top: 5px;
+z-index: 100;
+color: rgb(43, 88, 122);
+background-color: rgb(237, 241, 245);
+padding: 3px;
+min-width: 23px;
+}
+
 #main_panel > .bitrate,
 #audios_list > #initial_list > .bitrate,
 #audios_list > .bitrate,
