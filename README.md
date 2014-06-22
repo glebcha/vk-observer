@@ -5,6 +5,10 @@
 
 <a href="https://chrome.google.com/webstore/detail/vkobserver/piiadkppcjhcjnekceedinjidaeliabd">Скачать в Chrome store</a>
 
+```
+Я буду рад, если позаимствовав весь код или его часть, ты придешь к успеху.
+```
+
 ###В текущей версии:
 
 * загрузка аудиозаписей по клику на иконку загрузки в любом блоке и на любой странице
