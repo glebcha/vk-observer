@@ -6,7 +6,7 @@
 <a href="https://chrome.google.com/webstore/detail/vkobserver/piiadkppcjhcjnekceedinjidaeliabd">Скачать в Chrome store</a>
 
 ```
-Я буду рад, если позаимствовав весь код или его часть, ты придешь к успеху.
+Я буду рад, если позаимствовав весь код или его часть, ты придешь к успеху не став мудаком.
 ```
 
 ###В текущей версии:
@@ -24,9 +24,9 @@
 * добавляет ссылки на загрузки видео (только для видео, размещенного на серверах Вконтакте, не работает со сторонними видео-сервисами как YouTube и прочими) 
 
 ###Скриншоты:
-![Screenshot0](http://lite.glebcha.ru/img/vkobserver-styled.png)
+![Screenshot0](http://lite.glebcha.ru/img/vkobserver-styled-6.png)
 * * *
-![Screenshot1](http://lite.glebcha.ru/img/vkobserver-styled-1.png)
+![Screenshot1](http://lite.glebcha.ru/img/vkobserver-styled-5.png)
 * * *
 ![Screenshot1](http://lite.glebcha.ru/img/vkobserver-styled-2.png)
 
