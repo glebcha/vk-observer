@@ -15,7 +15,6 @@ font-family: Arial, sans-serif;
 font-weight: bold;
 background-color: #333;
 -webkit-background-clip: text;
--moz-background-clip: text;
 background-clip: text;
 color: rgba(0, 0, 0, 0.35);
 text-shadow: rgba(255, 255, 255, 0.8) 1px 1px 1px;
