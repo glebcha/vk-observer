@@ -1,13 +1,13 @@
 var vkObserver = {
-    syncStorage: function() {
+    syncStorage: function(key) {
         var storage = chrome.storage.sync;
-        storage.get('cache', function(data) {
+        storage.get(key, function(data) {
             var storVal = data.cache;
             if (storVal == 'enabled' || storVal == undefined) {
-                localStorage['VkObserver_cache'] = 'enabled';
+                localStorage['VkObserver_' + key] = 'enabled';
             }
             if (storVal == 'disabled') {
-                localStorage['VkObserver_cache'] = 'disabled';
+                localStorage['VkObserver_' + key] = 'disabled';
             }
         });
     },
@@ -227,10 +227,7 @@ var vkObserver = {
                                         var sideBar = b.querySelector('#mv_narrow');
                                         var videoTitle = b.querySelector('.mv_min_title').innerText;
                                         var el = document.createElement('div');
-                                        var elIcon = document.createElement('span');
                                         el.className = 'arr_div';
-                                        elIcon.className = 'download-icon';
-                                        el.appendChild(elIcon);
                                         if (!sideBar.querySelector('.arr_div')) {
                                             sideBar.appendChild(el);
                                         }
@@ -242,7 +239,7 @@ var vkObserver = {
                                             videoDownload.className = 'html5-video';
                                             videoDownload.href = sourceString;
                                             videoDownload.setAttribute('download', videoTitle);
-                                            videoDownload.innerText = 'Загрузить видео';
+                                            videoDownload.innerHTML = '<span class="download-icon"></span>Загрузить видео';
                                             el.appendChild(videoDownload);
                                             //TODO: Find video quality buttons inner text
                                             //console.log(sourceString);
@@ -280,7 +277,21 @@ var vkObserver = {
                                                     return newArr;
                                                 })();
                                                 var htmlUrls = noDupsUrls.map(function(link) {
-                                                    return '<li><a href="' + link + '" download="' + videoTitle + '">' + link.match(reg) + '</a></li>';
+                                                    var finalVideoQuality = '';
+                                                    var videoQuality = link.match(reg);
+                                                    if (videoQuality == 240) {
+                                                        finalVideoQuality = 'низкое (' + videoQuality + ')';
+                                                    } else if (videoQuality == 360) {
+                                                        finalVideoQuality = 'низкое (' + videoQuality + ')';
+                                                    } else if (videoQuality == 480) {
+                                                        finalVideoQuality = 'среднее (' + videoQuality + ')';
+                                                    } else if (videoQuality > 480) {
+                                                        finalVideoQuality = 'высокое (' + videoQuality + ')';
+                                                    } else {
+                                                        finalVideoQuality = videoQuality;
+                                                    }
+
+                                                    return '<li><span class="download-icon"></span><a href="' + link + '" download="' + videoTitle + '">качество - ' + finalVideoQuality + '</a></li>';
                                                 });
                                                 var uArr = document.createElement('ul');
                                                 uArr.innerHTML = htmlUrls.join('');
@@ -323,7 +334,7 @@ var vkObserver = {
     }
 };
 
-vkObserver.syncStorage();
+vkObserver.syncStorage('cache');
 vkObserver.showAudioLinks();
 vkObserver.downloadAll();
 vkObserver.pageMusic();

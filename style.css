@@ -51,7 +51,6 @@ text-decoration: none;
 .arr_div ul li {
 color: #2B587A;
 background-color: #EDF1F5;
-padding: 3px;
 }
 
 .bitrate {
@@ -59,6 +58,7 @@ position: absolute;
 right: 52px;
 top: 5px;
 z-index: 100;
+padding: 3px;
 }
 
 #audio.new .audio_edit_wrap, #audio.new .audio_add_wrap, 
@@ -120,7 +120,10 @@ padding: 0;
 
 .arr_div ul li {
 display: inline-block;
-margin: 0 3px;
+margin: 5px 0;
+padding: 5px 0;
+min-width: 100%;
+text-align: center;
 }
 
 .cached-status {
