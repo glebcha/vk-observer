@@ -1,14 +1,36 @@
 var vkObserver = {
-    syncStorage: function(key) {
+    clearStorage: function() {
+        chrome.storage.sync.clear();
+        chrome.storage.sync.set({
+            'settings': {
+                "bitrate": 'enabled',
+                "cache": 'enabled'
+            }
+        });
+    },
+
+    syncStorage: function() {
         var storage = chrome.storage.sync;
-        storage.get(key, function(data) {
-            var storVal = data.cache;
-            if (storVal == 'enabled' || storVal == undefined) {
-                localStorage['VkObserver_' + key] = 'enabled';
+        storage.get('settings', function(data) {
+            var storVal = data.settings;
+            if (storVal == undefined) {
+                vkObserver.clearStorage();
+                localStorage['VkObserver_cache'] = 'enabled';
+                localStorage['VkObserver_bitrate'] = 'enabled';
             }
-            if (storVal == 'disabled') {
-                localStorage['VkObserver_' + key] = 'disabled';
+            if (storVal.cache == 'enabled') {
+                localStorage['VkObserver_cache'] = 'enabled';
             }
+            if (storVal.bitrate == 'enabled') {
+                localStorage['VkObserver_bitrate'] = 'enabled';
+            }
+            if (storVal.cache == 'disabled') {
+                localStorage['VkObserver_cache'] = 'disabled';
+            }
+            if (storVal.bitrate == 'disabled') {
+                localStorage['VkObserver_bitrate'] = 'disabled';
+            }
+
         });
     },
 
@@ -75,6 +97,7 @@ var vkObserver = {
             var linkBtn = audioContainer.querySelector('.play_btn_wrap');
             var audioLink = linkBtn.parentNode.querySelector('input').value.split('?').splice(0, 1).toString();
             var audioDurationSeconds = audioContainer.querySelector('.duration').dataset.duration;
+            var bitrateStatus = localStorage['VkObserver_bitrate'];
             var bitRate = function(callback) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.overrideMimeType('text/xml');
@@ -93,21 +116,24 @@ var vkObserver = {
                 xmlhttp.open("HEAD", audioLink, true);
                 xmlhttp.send();
             };
-            bitRate(
-                function(response) {
-                    if (!audioContainer.querySelector('.bitrate')) {
-                        var text;
-                        if (isNaN(response) === true) {
-                            text = '×';
-                        } else {
-                            text = response + ' кбит/с';
+
+            if (bitrateStatus == 'enabled') {
+                bitRate(
+                    function(response) {
+                        if (!audioContainer.querySelector('.bitrate')) {
+                            var text;
+                            if (isNaN(response) === true) {
+                                text = '×';
+                            } else {
+                                text = response + ' кбит/с';
+                            }
+                            var b = document.createElement('span');
+                            b.className = 'bitrate';
+                            b.innerText = text.replace('-', '');
+                            audioContainer.appendChild(b);
                         }
-                        var b = document.createElement('span');
-                        b.className = 'bitrate';
-                        b.innerText = text.replace('-', '');
-                        audioContainer.appendChild(b);
-                    }
-                });
+                    });
+            }
         };
         if (audioBlocks.length > 0) {
             for (var i = 0; i < audioBlocks.length; i++) {
@@ -285,7 +311,7 @@ var vkObserver = {
                                                         finalVideoQuality = 'низкое (' + videoQuality + ')';
                                                     } else if (videoQuality == 480) {
                                                         finalVideoQuality = 'среднее (' + videoQuality + ')';
-                                                    } else if (videoQuality > 480) {
+                                                    } else if (videoQuality == 720) {
                                                         finalVideoQuality = 'высокое (' + videoQuality + ')';
                                                     } else {
                                                         finalVideoQuality = videoQuality;
@@ -334,7 +360,7 @@ var vkObserver = {
     }
 };
 
-vkObserver.syncStorage('cache');
+vkObserver.syncStorage();
 vkObserver.showAudioLinks();
 vkObserver.downloadAll();
 vkObserver.pageMusic();

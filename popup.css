@@ -3,10 +3,13 @@ width: 165px;
 box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
 background: silver;
 }
+.switcher {
+	padding: 5px 0;
+}
 .switcher,
 .switcher-label {
-display: inline-block;
-vertical-align: middle;
+	display: inline-block;
+	vertical-align: middle;
 }
 .switcher-label h4 {
 font-size: 16px;
@@ -15,17 +18,20 @@ font-family: Arial, sans-serif;
 font-weight: bold;
 background-color: #333;
 -webkit-background-clip: text;
+-moz-background-clip: text;
 background-clip: text;
 color: rgba(0, 0, 0, 0.35);
 text-shadow: rgba(255, 255, 255, 0.8) 1px 1px 1px;
 }
-input#toggle {
+input.toggle-cache,
+input.toggle-bitrate {
 display: none;
 max-height: 0;
 max-width: 0;
 opacity: 0;
 }
-input#toggle + label {
+input.toggle-cache + label,
+input.toggle-bitrate + label {
 display: block;
 position: relative;
 background: rgba(241, 172, 172, 0.9);
@@ -34,9 +40,11 @@ text-indent: -5000px;
 height: 30px;
 width: 50px;
 border-radius: 15px;
+cursor: pointer;
 }
 
-input#toggle + label:before {
+input.toggle-cache + label:before,
+input.toggle-bitrate + label:before {
 content: "";
 position: absolute;
 display: block;
@@ -46,10 +54,13 @@ top: 0;
 left: 0;
 border-radius: 15px;
 background: rgba(19,191,17,0);
+-moz-transition: .25s ease-in-out;
+-webkit-transition: .25s ease-in-out;
 transition: .25s ease-in-out;
 }
 
-input#toggle + label:after {
+input.toggle-cache + label:after,
+input.toggle-bitrate + label:after {
 content: "";
 position: absolute;
 display: block;
@@ -60,13 +71,17 @@ left: 0px;
 border-radius: 15px;
 background: #c4c4c4 -webkit-gradient( linear,0% 0%,0% 100%,from(rgba(255,255,255,.4)),to(rgba(0,0,0,0)));
 box-shadow: inset 0 0 0 1px rgba(0,0,0,.2), 0 2px 4px rgba(0,0,0,.2);
+-moz-transition: .25s ease-in-out;
+-webkit-transition: .25s ease-in-out;
 transition: .25s ease-in-out;
 }
-input#toggle:checked + label:before {
+input.toggle-cache:checked + label:before,
+input.toggle-bitrate:checked + label:before {
 width: 50px;
 background: #7697b5;
 }
-input#toggle:checked + label:after {
+input.toggle-cache:checked + label:after,
+input.toggle-bitrate:checked + label:after {
 left: 20px;
 box-shadow: inset 0 0 0 1px #7697b5, 0 2px 4px rgba(0,0,0,.2);
 }
