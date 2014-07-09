@@ -92,8 +92,7 @@ var vkObserver = {
         };
         var displayBitrate = function(event) {
             event.preventDefault();
-            var playBtn = event.target;
-            var audioContainer = playBtn.parentNode.parentNode.parentNode.parentNode;
+            var audioContainer = this;
             var linkBtn = audioContainer.querySelector('.play_btn_wrap');
             var audioLink = linkBtn.parentNode.querySelector('input').value.split('?').splice(0, 1).toString();
             var audioDurationSeconds = audioContainer.querySelector('.duration').dataset.duration;
@@ -144,7 +143,7 @@ var vkObserver = {
                     var audioTitle = audioBlock.querySelector('.title_wrap.fl_l .title').innerText;
                     var audioArtist = audioBlock.querySelector('.title_wrap.fl_l').firstElementChild.firstElementChild.innerText;
                     var audioName = audioArtist + "-" + audioTitle;
-                    var audioFullName = audioName.replace('.', '');
+                    var audioFullName = audioName.replace(/\./g, '');
                     var audioDurationBlock = audioBlock.querySelector('.duration');
                     var audioDurationText = audioDurationBlock.innerText.split(':');
                     var audioDurationSeconds = audioDurationText[0] * 60 + parseInt(audioDurationText[1], 10);
