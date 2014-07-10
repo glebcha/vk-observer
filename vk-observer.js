@@ -13,22 +13,22 @@ var vkObserver = {
         var storage = chrome.storage.sync;
         storage.get('settings', function(data) {
             var storVal = data.settings;
-            if (storVal == undefined) {
+            if (storVal === undefined) {
                 vkObserver.clearStorage();
-                localStorage['VkObserver_cache'] = 'enabled';
-                localStorage['VkObserver_bitrate'] = 'enabled';
+                localStorage.VkObserver_cache = 'enabled';
+                localStorage.VkObserver_bitrate = 'enabled';
             }
             if (storVal.cache == 'enabled') {
-                localStorage['VkObserver_cache'] = 'enabled';
+                localStorage.VkObserver_cache = 'enabled';
             }
             if (storVal.bitrate == 'enabled') {
-                localStorage['VkObserver_bitrate'] = 'enabled';
+                localStorage.VkObserver_bitrate = 'enabled';
             }
             if (storVal.cache == 'disabled') {
-                localStorage['VkObserver_cache'] = 'disabled';
+                localStorage.VkObserver_cache = 'disabled';
             }
             if (storVal.bitrate == 'disabled') {
-                localStorage['VkObserver_bitrate'] = 'disabled';
+                localStorage.VkObserver_bitrate = 'disabled';
             }
 
         });
@@ -51,7 +51,7 @@ var vkObserver = {
             var wrap = el.parentNode;
             var url = el.href;
             var downloadBtn = wrap.querySelector('.download-link');
-            var cacheStatus = localStorage['VkObserver_cache'];
+            var cacheStatus = localStorage.VkObserver_cache;
             if (cacheStatus == 'enabled') {
                 event.preventDefault();
                 event.stopPropagation();
@@ -72,7 +72,7 @@ var vkObserver = {
                         downloadBtn.style.display = 'block';
                     }
 
-                }
+                };
                 xhr.onreadystatechange = function(response) {
                     if (xhr.readyState == 4 && xhr.status == 200) {
                         var blob = new window.Blob([this.response], {
@@ -84,7 +84,7 @@ var vkObserver = {
                         el.click();
                         el.removeEventListener('click', getblob, false);
                     }
-                }
+                };
                 xhr.open('GET', url, true);
                 xhr.send(null);
             } else {}
@@ -96,7 +96,7 @@ var vkObserver = {
             var linkBtn = audioContainer.querySelector('.play_btn_wrap');
             var audioLink = linkBtn.parentNode.querySelector('input').value.split('?').splice(0, 1).toString();
             var audioDurationSeconds = audioContainer.querySelector('.duration').dataset.duration;
-            var bitrateStatus = localStorage['VkObserver_bitrate'];
+            var bitrateStatus = localStorage.VkObserver_bitrate;
             var bitRate = function(callback) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.overrideMimeType('text/xml');
