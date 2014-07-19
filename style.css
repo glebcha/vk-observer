@@ -51,6 +51,7 @@ text-decoration: none;
 .arr_div ul li {
 color: #2B587A;
 background-color: #EDF1F5;
+border-radius: 2px;
 }
 
 .bitrate {
@@ -59,6 +60,12 @@ right: 52px;
 top: 5px;
 z-index: 100;
 padding: 3px;
+}
+
+.arr_div ul li:hover {
+font-size: 12px;
+background: rgb(192, 207, 223);
+transition: all 0.5s ease-in-out;	
 }
 
 #audio.new .audio_edit_wrap, #audio.new .audio_add_wrap, 
@@ -134,7 +141,7 @@ z-index: 100;
 color: rgb(43, 88, 122);
 background-color: rgb(237, 241, 245);
 padding: 3px;
-min-width: 23px;
+min-width: 25px;
 }
 
 #main_panel > .bitrate,
