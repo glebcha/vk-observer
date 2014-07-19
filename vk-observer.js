@@ -13,22 +13,22 @@ var vkObserver = {
         var storage = chrome.storage.sync;
         storage.get('settings', function(data) {
             var storVal = data.settings;
-            if (storVal === undefined) {
+            if (storVal == undefined) {
                 vkObserver.clearStorage();
-                localStorage.VkObserver_cache = 'enabled';
-                localStorage.VkObserver_bitrate = 'enabled';
+                localStorage['VkObserver_cache'] = 'enabled';
+                localStorage['VkObserver_bitrate'] = 'enabled';
             }
             if (storVal.cache == 'enabled') {
-                localStorage.VkObserver_cache = 'enabled';
+                localStorage['VkObserver_cache'] = 'enabled';
             }
             if (storVal.bitrate == 'enabled') {
-                localStorage.VkObserver_bitrate = 'enabled';
+                localStorage['VkObserver_bitrate'] = 'enabled';
             }
             if (storVal.cache == 'disabled') {
-                localStorage.VkObserver_cache = 'disabled';
+                localStorage['VkObserver_cache'] = 'disabled';
             }
             if (storVal.bitrate == 'disabled') {
-                localStorage.VkObserver_bitrate = 'disabled';
+                localStorage['VkObserver_bitrate'] = 'disabled';
             }
 
         });
@@ -51,7 +51,7 @@ var vkObserver = {
             var wrap = el.parentNode;
             var url = el.href;
             var downloadBtn = wrap.querySelector('.download-link');
-            var cacheStatus = localStorage.VkObserver_cache;
+            var cacheStatus = localStorage['VkObserver_cache'];
             if (cacheStatus == 'enabled') {
                 event.preventDefault();
                 event.stopPropagation();
@@ -72,7 +72,7 @@ var vkObserver = {
                         downloadBtn.style.display = 'block';
                     }
 
-                };
+                }
                 xhr.onreadystatechange = function(response) {
                     if (xhr.readyState == 4 && xhr.status == 200) {
                         var blob = new window.Blob([this.response], {
@@ -84,7 +84,7 @@ var vkObserver = {
                         el.click();
                         el.removeEventListener('click', getblob, false);
                     }
-                };
+                }
                 xhr.open('GET', url, true);
                 xhr.send(null);
             } else {}
@@ -96,7 +96,7 @@ var vkObserver = {
             var linkBtn = audioContainer.querySelector('.play_btn_wrap');
             var audioLink = linkBtn.parentNode.querySelector('input').value.split('?').splice(0, 1).toString();
             var audioDurationSeconds = audioContainer.querySelector('.duration').dataset.duration;
-            var bitrateStatus = localStorage.VkObserver_bitrate;
+            var bitrateStatus = localStorage['VkObserver_bitrate'];
             var bitRate = function(callback) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.overrideMimeType('text/xml');
@@ -222,6 +222,94 @@ var vkObserver = {
         pageObserver.observe(page, pageConfig);
     },
 
+    showVideo: function(main, box) {
+        var videoWrap = document.querySelector('#mv_layer_wrap');
+        var parent = main || videoWrap;
+        if (parent) {
+            var videoBox = box || videoWrap.querySelector('.video_box');
+            var quality = [240, 360, 480, 720];
+            var reg = new RegExp(quality.join("|"), "i");
+
+            if (videoBox) {
+                var sideBar = parent.querySelector('#mv_narrow');
+                var videoTitle = parent.querySelector('.mv_min_title').innerText;
+                var el = document.createElement('div');
+                el.className = 'arr_div';
+                if (!sideBar.querySelector('.arr_div')) {
+                    sideBar.appendChild(el);
+                }
+                var html5 = videoBox.querySelector('video');
+                var embed = videoBox.querySelector('embed');
+                if (html5) {
+                    var sourceString = html5.getAttribute('src').split('mp4').slice(0, 1).toString() + "mp4";
+                    var videoDownload = document.createElement('a');
+                    videoDownload.className = 'html5-video';
+                    videoDownload.href = sourceString;
+                    videoDownload.setAttribute('download', videoTitle);
+                    videoDownload.innerHTML = '<span class="download-icon"></span>Загрузить видео';
+                    el.appendChild(videoDownload);
+                    //TODO: Find video quality buttons inner text
+                    //console.log(sourceString);
+                    //TODO: Create elements for all urls and push them to video links list
+                } else {
+                    if (!embed) {
+                        return;
+                    } else {
+                        var arr = embed.getAttribute('flashvars').split('url');
+                        var newArr = arr.filter(function(arg) {
+                            return arg.match(reg);
+                        });
+                        var filtered = newArr.join().split(/=|extra|%3F/);
+                        var urlArr = filtered.filter(function(val) {
+                            return val.match(/http|https/);
+                        });
+                        var filteredUrlArr = urlArr.map(function(item) {
+                            return decodeURIComponent(item);
+                        });
+                        var cleanUrlArr = filteredUrlArr.filter(function(url) {
+                            return url.match(/mp4/);
+                        });
+                        var noDupsUrls = (function() {
+                            var newArr = [];
+                            for (var i = 0; i < quality.length; i++) {
+                                var q = quality[i];
+                                for (var k = 0; k < cleanUrlArr.length; k++) {
+                                    var a = cleanUrlArr[k];
+                                    if (a.indexOf(q) > 0) {
+                                        newArr.push(a);
+                                        break;
+                                    }
+                                }
+                            }
+                            return newArr;
+                        })();
+                        var htmlUrls = noDupsUrls.map(function(link) {
+                            var finalVideoQuality = '';
+                            var videoQuality = link.match(reg);
+                            if (videoQuality == 240) {
+                                finalVideoQuality = 'низкое (' + videoQuality + ')';
+                            } else if (videoQuality == 360) {
+                                finalVideoQuality = 'низкое (' + videoQuality + ')';
+                            } else if (videoQuality == 480) {
+                                finalVideoQuality = 'среднее (' + videoQuality + ')';
+                            } else if (videoQuality == 720) {
+                                finalVideoQuality = 'высокое (' + videoQuality + ')';
+                            } else {
+                                finalVideoQuality = videoQuality;
+                            }
+
+                            return '<li><span class="download-icon"></span><a href="' + link + '" download="' + videoTitle + '">качество - ' + finalVideoQuality + '</a></li>';
+                        });
+                        var uArr = document.createElement('ul');
+                        uArr.innerHTML = htmlUrls.join('');
+                        el.appendChild(uArr);
+
+                    }
+                }
+            }
+        }
+    },
+
     bodyMedia: function() {
         var body = document.body;
         var bodyConfig = {
@@ -236,8 +324,7 @@ var vkObserver = {
                     var node = mutation.target;
                     var playlist = node.querySelector('#pad_playlist_panel');
                     var b = node.querySelector('#mv_layer_wrap');
-                    var quality = [240, 360, 480, 720];
-                    var reg = new RegExp(quality.join("|"), "i");
+
 
                     if (b) {
 
@@ -247,84 +334,7 @@ var vkObserver = {
                                 mutations.forEach(function(mutation) {
                                     var node = mutation.target;
                                     var videoBox = node.querySelector('.video_box');
-
-                                    if (videoBox) {
-                                        var sideBar = b.querySelector('#mv_narrow');
-                                        var videoTitle = b.querySelector('.mv_min_title').innerText;
-                                        var el = document.createElement('div');
-                                        el.className = 'arr_div';
-                                        if (!sideBar.querySelector('.arr_div')) {
-                                            sideBar.appendChild(el);
-                                        }
-                                        var html5 = videoBox.querySelector('video');
-                                        var embed = videoBox.querySelector('embed');
-                                        if (html5) {
-                                            var sourceString = html5.getAttribute('src').split('mp4').slice(0, 1).toString() + "mp4";
-                                            var videoDownload = document.createElement('a');
-                                            videoDownload.className = 'html5-video';
-                                            videoDownload.href = sourceString;
-                                            videoDownload.setAttribute('download', videoTitle);
-                                            videoDownload.innerHTML = '<span class="download-icon"></span>Загрузить видео';
-                                            el.appendChild(videoDownload);
-                                            //TODO: Find video quality buttons inner text
-                                            //console.log(sourceString);
-                                            //TODO: Create elements for all urls and push them to video links list
-                                        } else {
-                                            if (!embed) {
-                                                return;
-                                            } else {
-                                                var arr = embed.getAttribute('flashvars').split('url');
-                                                var newArr = arr.filter(function(arg) {
-                                                    return arg.match(reg);
-                                                });
-                                                var filtered = newArr.join().split(/=|extra|%3F/);
-                                                var urlArr = filtered.filter(function(val) {
-                                                    return val.match(/http|https/);
-                                                });
-                                                var filteredUrlArr = urlArr.map(function(item) {
-                                                    return decodeURIComponent(item);
-                                                });
-                                                var cleanUrlArr = filteredUrlArr.filter(function(url) {
-                                                    return url.match(/mp4/);
-                                                });
-                                                var noDupsUrls = (function() {
-                                                    var newArr = [];
-                                                    for (var i = 0; i < quality.length; i++) {
-                                                        var q = quality[i];
-                                                        for (var k = 0; k < cleanUrlArr.length; k++) {
-                                                            var a = cleanUrlArr[k];
-                                                            if (a.indexOf(q) > 0) {
-                                                                newArr.push(a);
-                                                                break;
-                                                            }
-                                                        }
-                                                    }
-                                                    return newArr;
-                                                })();
-                                                var htmlUrls = noDupsUrls.map(function(link) {
-                                                    var finalVideoQuality = '';
-                                                    var videoQuality = link.match(reg);
-                                                    if (videoQuality == 240) {
-                                                        finalVideoQuality = 'низкое (' + videoQuality + ')';
-                                                    } else if (videoQuality == 360) {
-                                                        finalVideoQuality = 'низкое (' + videoQuality + ')';
-                                                    } else if (videoQuality == 480) {
-                                                        finalVideoQuality = 'среднее (' + videoQuality + ')';
-                                                    } else if (videoQuality == 720) {
-                                                        finalVideoQuality = 'высокое (' + videoQuality + ')';
-                                                    } else {
-                                                        finalVideoQuality = videoQuality;
-                                                    }
-
-                                                    return '<li><span class="download-icon"></span><a href="' + link + '" download="' + videoTitle + '">качество - ' + finalVideoQuality + '</a></li>';
-                                                });
-                                                var uArr = document.createElement('ul');
-                                                uArr.innerHTML = htmlUrls.join('');
-                                                el.appendChild(uArr);
-
-                                            }
-                                        }
-                                    }
+                                    vkObserver.showVideo(b, videoBox);
                                 });
                             });
                         var bConfig = {
@@ -362,5 +372,6 @@ var vkObserver = {
 vkObserver.syncStorage();
 vkObserver.showAudioLinks();
 vkObserver.downloadAll();
+vkObserver.showVideo();
 vkObserver.pageMusic();
 vkObserver.bodyMedia();
