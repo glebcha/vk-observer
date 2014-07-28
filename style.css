@@ -62,19 +62,28 @@ z-index: 100;
 padding: 3px;
 }
 
+.bitrate > span {
+	font-size: 10px;
+	padding-left: 10px;
+}
+
 .arr_div ul li:hover {
 font-size: 12px;
 background: rgb(192, 207, 223);
 transition: all 0.5s ease-in-out;	
 }
 
-#audio.new .audio_edit_wrap, #audio.new .audio_add_wrap, 
+#audio.new .audio_add_wrap, 
 #audio.new .audio_remove_wrap {
 margin: 6px 6px 6px 76px !important;
 }
 
+#audio.new .audio_edit_wrap {
+	margin: 6px 60px 6px 0px !important;
+}
+
 #audio.new .audio .title_wrap {
-width: 250px !important;
+width: 200px !important;
 }
 
 .download-all-link .download-tooltip {

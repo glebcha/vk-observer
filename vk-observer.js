@@ -104,12 +104,14 @@ var vkObserver = {
                 xmlhttp.onreadystatechange = function() {
                     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
                         var size = xmlhttp.getResponseHeader('Content-Length');
+                        var sizeLong = Math.floor(size / 1024) / 1024;
+                        var sizeShort = sizeLong.toFixed(1);
                         var kbit = size / 128;
                         var kbps = Math.ceil(Math.round(kbit / audioDurationSeconds) / 16) * 16;
                         if (kbps > 320) {
                             kbps = 320;
                         }
-                        callback(kbps);
+                        callback([kbps, sizeShort]);
                     }
                 };
                 xmlhttp.open("HEAD", audioLink, true);
@@ -119,16 +121,18 @@ var vkObserver = {
             if (bitrateStatus == 'enabled') {
                 bitRate(
                     function(response) {
+                        var fileRate = response[0];
+                        var fileSize = response[1];
                         if (!audioContainer.querySelector('.bitrate')) {
                             var text;
-                            if (isNaN(response) === true) {
+                            if (isNaN(fileRate) === true) {
                                 text = '×';
                             } else {
-                                text = response + ' кбит/с';
+                                text = fileRate + ' кбит/с' + '<span>' + fileSize + ' МБ</span>';
                             }
                             var b = document.createElement('span');
                             b.className = 'bitrate';
-                            b.innerText = text.replace('-', '');
+                            b.innerHTML = text.replace('-', '');
                             audioContainer.appendChild(b);
                         }
                     });
