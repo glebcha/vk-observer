@@ -86,6 +86,16 @@ margin: 6px 6px 6px 76px !important;
 width: 200px !important;
 }
 
+.audio .title_wrap {
+	width: auto;
+	max-width: 160px;
+}
+
+.wide_wall_module .audio .title_wrap {
+	width: auto;
+	max-width: 360px;
+}
+
 .download-all-link .download-tooltip {
 display: none;
 position: absolute;
