@@ -80,9 +80,10 @@ var vkObserver = {
                         });
                         var link = winUrl.createObjectURL(blob);
                         el.href = link;
-                        winUrl.revokeObjectURL(blob);
                         el.click();
                         el.removeEventListener('click', getblob, false);
+                        winUrl.revokeObjectURL(link);
+                        el.href = getLink;
                     }
                 };
                 xhr.open('GET', url, true);
@@ -215,10 +216,7 @@ var vkObserver = {
                     var audios = node.querySelectorAll('.audio');
                     vkObserver.showAudioLinks(audios);
                     var blocks = node.querySelectorAll('.post');
-
                     vkObserver.downloadAll(blocks);
-
-
                 });
 
             });
