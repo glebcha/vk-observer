@@ -135,6 +135,7 @@ var vkObserver = {
                             b.className = 'bitrate';
                             b.innerHTML = text.replace('-', '');
                             audioContainer.appendChild(b);
+                            audioContainer.removeEventListener('mouseover', displayBitrate);
                         }
                     });
             }
