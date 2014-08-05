@@ -88,11 +88,14 @@ width: 200px !important;
 
 .audio .title_wrap {
 	width: auto;
-	max-width: 160px;
+	max-width: 200px;
+}
+
+.choose_audio_row .audio .title_wrap {
+	max-width: 340px;
 }
 
 .wide_wall_module .audio .title_wrap {
-	width: auto;
 	max-width: 360px;
 }
 
