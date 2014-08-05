@@ -177,9 +177,7 @@ var vkObserver = {
             event.preventDefault();
             var item = event.target.parentNode;
             for (var z = 0; z < item.querySelectorAll('.audio').length; z++) {
-                var ev = document.createEvent("MouseEvents");
-                ev.initMouseEvent("click", true, false, self, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-                item.querySelectorAll('.download-link')[z].dispatchEvent(ev);
+                item.querySelectorAll('.download-link')[z].click();
             }
         };
 
