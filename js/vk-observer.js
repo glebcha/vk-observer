@@ -4,7 +4,8 @@ var vkObserver = {
         chrome.storage.sync.set({
             'settings': {
                 "bitrate": 'enabled',
-                "cache": 'enabled'
+                "cache": 'enabled',
+                "scrobble": 'disabled'
             }
         });
     },
@@ -17,6 +18,7 @@ var vkObserver = {
                 vkObserver.clearStorage();
                 localStorage.VkObserver_cache = 'enabled';
                 localStorage.VkObserver_bitrate = 'enabled';
+                localStorage.VkObserver_scrobble = 'disabled';
             }
             if (storVal.cache == 'enabled') {
                 localStorage.VkObserver_cache = 'enabled';
@@ -24,11 +26,17 @@ var vkObserver = {
             if (storVal.bitrate == 'enabled') {
                 localStorage.VkObserver_bitrate = 'enabled';
             }
+            if (storVal.scrobble == 'enabled') {
+                localStorage.VkObserver_scrobble = 'enabled';
+            }
             if (storVal.cache == 'disabled') {
                 localStorage.VkObserver_cache = 'disabled';
             }
             if (storVal.bitrate == 'disabled') {
                 localStorage.VkObserver_bitrate = 'disabled';
+            }
+            if (storVal.scrobble == 'disabled') {
+                localStorage.VkObserver_scrobble = 'disabled';
             }
 
         });
@@ -144,6 +152,7 @@ var vkObserver = {
             for (var i = 0; i < audioBlocks.length; i++) {
                 var audioBlock = audioBlocks[i];
                 var btn = audioBlock.querySelector('.play_btn_wrap');
+                var btnPlay = btn.querySelector('.play_new');
                 if (!btn.querySelector('.download-link')) {
                     var getLink = btn.parentNode.querySelector('input').value.split('?').splice(0, 1).toString();
                     var audioTitle = audioBlock.querySelector('.title_wrap.fl_l .title').innerText;
@@ -209,16 +218,16 @@ var vkObserver = {
 
         var pageObserver = new window.WebKitMutationObserver(
 
-            function(mutations) {
-                mutations.forEach(function(mutation) {
-                    var node = mutation.target;
-                    var audios = node.querySelectorAll('.audio');
-                    vkObserver.showAudioLinks(audios);
-                    var blocks = node.querySelectorAll('.post');
-                    vkObserver.downloadAll(blocks);
-                });
-
+        function(mutations) {
+            mutations.forEach(function(mutation) {
+                var node = mutation.target;
+                var audios = node.querySelectorAll('.audio');
+                vkObserver.showAudioLinks(audios);
+                var blocks = node.querySelectorAll('.post');
+                vkObserver.downloadAll(blocks); 
             });
+
+        });
 
         pageObserver.observe(page, pageConfig);
     },
@@ -311,7 +320,78 @@ var vkObserver = {
         }
     },
 
+    scrobbler: function(songArtist, songTitle, statusIcon) {
+        var scrobbleStatus = localStorage.VkObserver_scrobble;
+        var storage = chrome.storage.sync;
+        
+                                
+        storage.get('lastkeys', function(data) {
+            var apiKey = data.lastkeys.api;
+            var apiSecret = data.lastkeys.secret;
+            var ts = Math.floor(new Date().getTime()/1000);
+            var lastfm = new LastFM({
+                apiKey: apiKey,
+                apiSecret: apiSecret
+            });
+            
+            storage.get('lastsession', function(data) {
+                var sk = data.lastsession;
+                var startScrobble = function() {
+                    lastfm.track.scrobble({artist: songArtist, track: songTitle, timestamp: ts}, {key: sk}, {success: function(data){
+                        statusIcon.className = 'scrobbled';
+                        //console.log("Заскробблен! " + songArtist + " " + songTitle);
+                    }, error: function(code, message){
+                        console.log("Ошибка: " + message + " код: " + code);
+                    }});
+                };
+
+                if (scrobbleStatus == 'enabled' && songArtist !== undefined) {
+                    startScrobble();
+                }
+
+            });
+
+        });
+        
+    },
+
+
+    likeSong: function(songArtist, songTitle, likeIcon) {
+        var scrobbleStatus = localStorage.VkObserver_scrobble;
+        var storage = chrome.storage.sync;
+                                
+        storage.get('lastkeys', function(data) {
+            var apiKey = data.lastkeys.api;
+            var apiSecret = data.lastkeys.secret;
+            var ts = Math.floor(new Date().getTime()/1000);
+            var lastfm = new LastFM({
+                apiKey: apiKey,
+                apiSecret: apiSecret
+            });
+            
+            storage.get('lastsession', function(data) {
+                var sk = data.lastsession;
+                var like = function() {
+                    lastfm.track.love({artist: songArtist, track: songTitle}, {key: sk}, {success: function(data){
+                        likeIcon.className = 'liked';
+                        //console.log("Добавлен в любимые! " + songArtist + " " + songTitle);
+                    }, error: function(code, message){
+                        console.log("Ошибка: " + message + " код: " + code);
+                    }});
+                };
+
+                if (scrobbleStatus == 'enabled' && songArtist !== undefined && likeIcon.className !== 'liked' && likeIcon.className !== 'changed') {
+                    like();  
+                }
+
+            });
+
+        });
+        
+    },
+
     bodyMedia: function() {
+        var checker;
         var body = document.body;
         var bodyConfig = {
             childList: true,
@@ -325,7 +405,7 @@ var vkObserver = {
                     var node = mutation.target;
                     var playlist = node.querySelector('#pad_playlist_panel');
                     var b = node.querySelector('#mv_layer_wrap');
-
+                    var ticker = node.querySelector('#audio_global');
 
                     if (b) {
 
@@ -361,6 +441,59 @@ var vkObserver = {
                         };
                         playlistObserver.observe(playlist, playlistConfig);
                     }
+
+                    if (ticker) {
+
+                        setTimeout(function(){
+                            localStorage.vkObserver_title = ticker.querySelector('#gp_title').innerText;
+                            localStorage.vkObserver_artist = ticker.querySelector('#gp_performer').innerText;
+                        }, 2000);
+                        
+                        if(!ticker.querySelector('.last-controls')){
+                            var lastControls = document.createElement('div');
+                            var scrobbleIcon = document.createElement('div');
+                            var likeIcon = document.createElement('div');
+                            lastControls.className = 'last-controls';
+                            scrobbleIcon.id = 'scrobble-icon';
+                            likeIcon.id = 'like-icon';
+                            lastControls.appendChild(scrobbleIcon);
+                            lastControls.appendChild(likeIcon);
+                            ticker.appendChild(lastControls);
+                        }
+
+                        var iconL = ticker.querySelector('#like-icon');
+                        ticker.onclick = function(){
+                            vkObserver.likeSong(localStorage.vkObserver_artist, localStorage.vkObserver_title, iconL);
+                        };
+                        
+                        var tickerObs = new MutationObserver(function(mutations, observer) {
+                            for(var k = 0; k < mutations.length; k++) {        
+                                var playing = mutations[k].target;
+                                var artist = playing.parentNode.querySelector('#gp_performer');  
+                                var title = playing.parentNode.querySelector('#gp_title');
+                                var iconStatus = ticker.querySelector('#scrobble-icon');
+                                var iconLike = ticker.querySelector('#like-icon');
+
+                                if (title.innerText !== localStorage.vkObserver_title) {
+                                    window.clearTimeout(checker);
+                                    iconStatus.className = '';
+                                    iconLike.className = 'changed';
+                                    localStorage.vkObserver_title = title.innerText;
+                                    localStorage.vkObserver_artist = artist.innerText;
+                                    checker = window.setTimeout(function(){
+                                        vkObserver.scrobbler(localStorage.vkObserver_artist, localStorage.vkObserver_title, iconStatus);
+                                        iconLike.className = '';
+                                    }, 21000);
+                                }
+                        
+                            }
+                        });
+
+                    tickerObs.observe(ticker, {
+                        childList: true,
+                        subtree: true
+                    });
+                }
 
 
                 });
