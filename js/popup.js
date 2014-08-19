@@ -42,7 +42,7 @@ var getOption = function() {
             "cache": 'enabled',
             "scrobble": 'disabled'
         };
-        if (state === undefined) {
+        if (state === undefined || state.scrobble === undefined) {
             chrome.storage.sync.clear();
             saveOption(defaultSettings);
         }
@@ -58,15 +58,14 @@ var getOption = function() {
         if (state.bitrate == 'disabled') {
             toggleBitrate.checked = false;
         }
-        storage.get('lastsession', function(data){
-            var key = data.lastsession;
-            if (state.scrobble == 'enabled' && key !== undefined) {
-                toggleScrobble.checked = true;
-            }
-            if (state.scrobble == 'disabled' || key == undefined) {
-                toggleScrobble.checked = false;
-            }  
-        });
+
+        if (state.scrobble == 'enabled') {
+            toggleScrobble.checked = true;
+        }
+        if (state.scrobble == 'disabled') {
+            toggleScrobble.checked = false;
+        }  
+
         
     });
     storage.get('lastkeys', function(data) {
