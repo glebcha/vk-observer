@@ -75,6 +75,8 @@ function LastFM(options){
 			doc.open();
 			doc.clear();
 			doc.write('<form method="post" action="' + apiUrl + '" id="form" accept-charset="UTF-8">');
+			//API accept only UTF-8 and that's why non-latin chars will cause error in default js lib
+			
 
 			/* Write POST parameters as input fields. */
 			for(var param in params){
