@@ -16,3 +16,6 @@ xcuserdata
 # svn & cvs
 .svn
 CVS
+
+# JetBrains IDE
+.idea
