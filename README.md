@@ -22,15 +22,18 @@
 * отображение размера файла и битрейта по наведению на аудиозапись 
 
 * добавляет ссылки на загрузки видео (только для видео, размещенного на серверах Вконтакте, не работает со сторонними видео-сервисами как YouTube и прочими)
+* поддерживается скробблинг и добавление в любимые треки для Last.fm
 
 ###В планах:
 
-* фоновый скробблинг для всех аудиозаписей
+* еще больше Last.fm 
 
 ###Скриншоты:
-![Screenshot0](http://lite.glebcha.ru/img/vkobserver-styled-bitrate.png)
+![Screenshot0](http://lite.glebcha.ru/img/vkobserver-styled-6.png)
 * * *
-![Screenshot1](http://lite.glebcha.ru/img/vkobserver-styled-5.png)
+![Screenshot1](http://lite.glebcha.ru/img/vkobserver-styled-7.png)
 * * *
-![Screenshot1](http://lite.glebcha.ru/img/vkobserver-styled-2.png)
+![Screenshot2](http://lite.glebcha.ru/img/vkobserver-styled-5.png)
+* * *
+![Screenshot3](http://lite.glebcha.ru/img/vkobserver-styled-2.png)
 
