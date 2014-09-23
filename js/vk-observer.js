@@ -44,12 +44,6 @@ var vkObserver = {
 
     showAudioLinks: function(audios) {
         var audioBlocks = audios || document.querySelectorAll('.audio');
-        var dragDownload = function(e) {
-            var downloadLink = this.querySelector('.download-link');
-            if (downloadLink.dataset) {
-                e.dataTransfer.setData('DownloadURL', downloadLink.dataset.download);
-            }
-        };
         var noBubbling = function(event) {
             event.stopPropagation();
         };
@@ -168,9 +162,7 @@ var vkObserver = {
                     d.href = getLink;
                     d.setAttribute('download', audioFullName);
                     d.addEventListener('click', noBubbling, false);
-                    d.addEventListener('click', getblob, false); //before hover cursor not pointer and opacity 0.7, after - cursor pointer/opacity 1/animation
-                    audioBlock.setAttribute('draggable', 'true');
-                    audioBlock.addEventListener('dragstart', dragDownload, false);
+                    d.addEventListener('click', getblob, false); 
                     btn.appendChild(d);
                     audioBlock.addEventListener('mouseover', displayBitrate, false);
                 }
@@ -339,13 +331,14 @@ var vkObserver = {
                 var startScrobble = function() {
                     lastfm.track.scrobble({artist: songArtist, track: songTitle, timestamp: ts}, {key: sk}, {success: function(data){
                         statusIcon.className = 'scrobbled';
+                        statusIcon.setAttribute('title', 'заскроблено');
                         //console.log("Заскробблен! " + songArtist + " " + songTitle);
                     }, error: function(code, message){
                         console.log("Ошибка: " + message + " код: " + code);
                     }});
                 };
 
-                if (scrobbleStatus == 'enabled' && songArtist !== undefined) {
+                if (scrobbleStatus == 'enabled' && songArtist !== null && songArtist !== undefined) {
                     startScrobble();
                 }
 
@@ -374,13 +367,14 @@ var vkObserver = {
                 var like = function() {
                     lastfm.track.love({artist: songArtist, track: songTitle}, {key: sk}, {success: function(data){
                         likeIcon.className = 'liked';
+                        likeIcon.setAttribute('title', 'добавлено в любимые');
                         //console.log("Добавлен в любимые! " + songArtist + " " + songTitle);
                     }, error: function(code, message){
                         console.log("Ошибка: " + message + " код: " + code);
                     }});
                 };
 
-                if (scrobbleStatus == 'enabled' && songArtist !== undefined && likeIcon.className !== 'liked' && likeIcon.className !== 'changed') {
+                if (scrobbleStatus == 'enabled' && songArtist !== null && songArtist !== undefined && likeIcon.className !== 'liked' && likeIcon.className !== 'changed') {
                     like();  
                 }
 
@@ -477,7 +471,9 @@ var vkObserver = {
                                 if (title.innerText !== localStorage.vkObserver_title) {
                                     window.clearTimeout(checker);
                                     iconStatus.className = '';
+                                    iconStatus.setAttribute('title', 'скробблится');
                                     iconLike.className = 'changed';
+                                    iconLike.setAttribute('title', 'добавить в любимые');
                                     localStorage.vkObserver_title = title.innerText;
                                     localStorage.vkObserver_artist = artist.innerText;
                                     checker = window.setTimeout(function(){
