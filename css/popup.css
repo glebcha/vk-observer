@@ -135,7 +135,7 @@ input.toggle-bitrate:checked + label:after {
     position: relative;
     white-space: nowrap;
     text-shadow: rgba(255, 255, 255, 0.8) 1px 1px 1px;
-    font-size: 0.9em;
+    font-size: 14px;
 }
 
 .social-likes__widget:before, .social-likes__widget:after {
