@@ -42,7 +42,7 @@ var vkObserver = {
         });
     },
 
-    showAudioLinks: function(audios) {
+    showA: function(audios) {
         var audioBlocks = audios || document.querySelectorAll('.audio');
         var noBubbling = function(event) {
             event.stopPropagation();
@@ -171,7 +171,7 @@ var vkObserver = {
 
     },
 
-    downloadAll: function(entries) {
+    getA: function(entries) {
 
         var posts = entries || document.querySelectorAll('.post');
         var getAllAudios = function(event) {
@@ -192,7 +192,6 @@ var vkObserver = {
                     btn.className = 'download-all-link';
                     btn.innerHTML = 'Загрузить все<span class="download-tooltip">Нажмите, чтобы загрузить все аудиозаписи</span>';
                     btn.addEventListener('click', getAllAudios, false);
-                    //TODO: Deal with multi-download
                     if (!post.querySelector('.download-all-link')) {
                         wallText.appendChild(btn);
                     }
@@ -201,7 +200,7 @@ var vkObserver = {
         }
     },
 
-    pageMusic: function() {
+    pageM: function() {
         var page = document.querySelector('#page_body.fl_r');
         var pageConfig = {
             childList: true,
@@ -214,9 +213,9 @@ var vkObserver = {
             mutations.forEach(function(mutation) {
                 var node = mutation.target;
                 var audios = node.querySelectorAll('.audio');
-                vkObserver.showAudioLinks(audios);
+                vkObserver.showA(audios);
                 var blocks = node.querySelectorAll('.post');
-                vkObserver.downloadAll(blocks); 
+                vkObserver.getA(blocks); 
             });
 
         });
@@ -224,7 +223,7 @@ var vkObserver = {
         pageObserver.observe(page, pageConfig);
     },
 
-    showVideo: function(main, box) {
+    showV: function(main, box) {
         var videoWrap = document.querySelector('#mv_layer_wrap');
         var parent = main || videoWrap;
         if (parent) {
@@ -250,9 +249,6 @@ var vkObserver = {
                     videoDownload.setAttribute('download', videoTitle);
                     videoDownload.innerHTML = '<span class="download-icon"></span>Загрузить видео';
                     el.appendChild(videoDownload);
-                    //TODO: Find video quality buttons inner text
-                    //console.log(sourceString);
-                    //TODO: Create elements for all urls and push them to video links list
                 } else {
                     if (!embed) {
                         return;
@@ -375,7 +371,7 @@ var vkObserver = {
                 };
                 var unlike = function() {
                     lastfm.track.unlove({artist: songArtist, track: songTitle}, {key: sk}, {success: function(data){
-                        likeIcon.className.replace('liked', '');
+                        likeIcon.className = 'unliked';
                         likeIcon.setAttribute('title', 'удалено из любимых');
                         //console.log("Удален из любимых! " + songArtist + " " + songTitle);
                     }, error: function(code, message){
@@ -383,11 +379,12 @@ var vkObserver = {
                     }});
                 };
 
-                if (scrobbleStatus == 'enabled' && songArtist !== null && songArtist !== undefined && likeIcon.className !== 'liked' && likeIcon.className !== 'changed') {
-                    like();  
-                }
-                if (scrobbleStatus == 'enabled' && songArtist !== null && songArtist !== undefined && likeIcon.className === 'liked' && likeIcon.className === 'changed') {
-                    unlike();  
+                if (scrobbleStatus == 'enabled' && songArtist !== null && songArtist !== undefined && likeIcon.className !== 'changed') {
+                    if(likeIcon.className !== 'liked' || likeIcon.className === 'unliked') {
+                        like();
+                    } else {
+                        unlike();
+                    } 
                 }
 
             });
@@ -396,7 +393,7 @@ var vkObserver = {
         
     },
 
-    bodyMedia: function() {
+    bodyM: function() {
         var checker;
         var body = document.body;
         var bodyConfig = {
@@ -421,7 +418,7 @@ var vkObserver = {
                                 mutations.forEach(function(mutation) {
                                     var node = mutation.target;
                                     var videoBox = node.querySelector('.video_box');
-                                    vkObserver.showVideo(b, videoBox);
+                                    vkObserver.showV(b, videoBox);
                                 });
                             });
                         var bConfig = {
@@ -438,7 +435,7 @@ var vkObserver = {
                                 mutations.forEach(function(mutation) {
                                     var node = mutation.target;
                                     var audios = node.querySelectorAll('.audio');
-                                    vkObserver.showAudioLinks(audios);
+                                    vkObserver.showA(audios);
                                 });
                             });
                         var playlistConfig = {
@@ -512,8 +509,8 @@ var vkObserver = {
 };
 
 vkObserver.syncStorage();
-vkObserver.showAudioLinks();
-vkObserver.downloadAll();
-vkObserver.showVideo();
-vkObserver.pageMusic();
-vkObserver.bodyMedia();
+vkObserver.showA();
+vkObserver.getA();
+vkObserver.showV();
+vkObserver.pageM();
+vkObserver.bodyM();
