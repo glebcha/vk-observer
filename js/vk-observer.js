@@ -373,9 +373,21 @@ var vkObserver = {
                         console.log("Ошибка: " + message + " код: " + code);
                     }});
                 };
+                var unlike = function() {
+                    lastfm.track.unlove({artist: songArtist, track: songTitle}, {key: sk}, {success: function(data){
+                        likeIcon.className.replace('liked', '');
+                        likeIcon.setAttribute('title', 'удалено из любимых');
+                        //console.log("Удален из любимых! " + songArtist + " " + songTitle);
+                    }, error: function(code, message){
+                        console.log("Ошибка: " + message + " код: " + code);
+                    }});
+                };
 
                 if (scrobbleStatus == 'enabled' && songArtist !== null && songArtist !== undefined && likeIcon.className !== 'liked' && likeIcon.className !== 'changed') {
                     like();  
+                }
+                if (scrobbleStatus == 'enabled' && songArtist !== null && songArtist !== undefined && likeIcon.className === 'liked' && likeIcon.className === 'changed') {
+                    unlike();  
                 }
 
             });
