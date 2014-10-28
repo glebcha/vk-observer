@@ -5,7 +5,9 @@
 
 ~~Расширение было удалено модераторами хром стора за несоответствие правилам копирастии в современном мире, хотя Вконтакте ничего и не скрывает. Скачивайте, включайте режим разработчика во вкладке Расширения и добавляйте папку с загруженным расширением. Либо используйте форки Chrome, которые позволяют использовать CRX (например Яндекс Браузер или Opera).~~
 
-Расширение снова в хром сторе https://chrome.google.com/webstore/detail/vk-observer/piiadkppcjhcjnekceedinjidaeliabd
+Расширение снова в хром сторе:
+
+https://chrome.google.com/webstore/detail/vk-observer/piiadkppcjhcjnekceedinjidaeliabd
 
 Группа Вконтакте https://vk.com/vkobserverchrome
 
