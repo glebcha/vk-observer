@@ -19,7 +19,7 @@
     position: absolute;
     right: 33px;
     top: 9px;
-    z-index: 100;
+    z-index: 1000;
     opacity: 0.4;
 }
 
@@ -80,22 +80,7 @@
     margin: 6px 60px 6px 0px !important;
 }
 
-#audio.new .audio .title_wrap {
-    width: 200px !important;
-}
 
-.audio .title_wrap {
-    width: auto;
-    max-width: 200px;
-}
-
-.choose_audio_row .audio .title_wrap {
-    max-width: 340px;
-}
-
-.wide_wall_module .audio .title_wrap {
-    max-width: 360px;
-}
 
 .download-all-link .download-tooltip {
     display: none;
