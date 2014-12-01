@@ -19,8 +19,12 @@
     position: absolute;
     right: 33px;
     top: 9px;
-    z-index: 1000;
+    z-index: 200;
     opacity: 0.4;
+}
+
+.im_log_body .download-link{
+    z-index: 100;
 }
 
 .download-link:hover {
