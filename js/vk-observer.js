@@ -97,7 +97,7 @@ var vkObserver = {
             event.preventDefault();
             var audioContainer = this;
             var linkBtn = audioContainer.querySelector('.play_btn_wrap');
-            var audioLink = linkBtn.parentNode.querySelector('input').value.split('?').splice(0, 1).toString();
+            var audioLink = linkBtn.parentNode.querySelector('input').value.split(',').splice(0, 1).toString();
             var audioDurationSeconds = audioContainer.querySelector('.duration').dataset.duration;
             var bitrateStatus = localStorage.VkObserver_bitrate;
             var bitRate = function(callback) {
@@ -105,8 +105,9 @@ var vkObserver = {
                 xmlhttp.overrideMimeType('text/xml');
 
                 xmlhttp.onreadystatechange = function() {
-                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                        var size = xmlhttp.getResponseHeader('Content-Length');
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 206) {
+                        var range = xmlhttp.getResponseHeader('Content-Range');
+	                    var size = range.split('/').pop();
                         var sizeLong = Math.floor(size / 1024) / 1024;
                         var sizeShort = sizeLong.toFixed(1);
                         var kbit = size / 128;
@@ -117,7 +118,8 @@ var vkObserver = {
                         callback([kbps, sizeShort]);
                     }
                 };
-                xmlhttp.open("HEAD", audioLink, true);
+                xmlhttp.open("GET", audioLink, true);
+	            xmlhttp.setRequestHeader('Range', 'bytes=0-1');
                 xmlhttp.send();
             };
 

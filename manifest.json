@@ -1,0 +1,27 @@
+{
+   "browser_action": {
+      "default_icon": "images/32x32.png",
+      "default_popup": "popup.html"
+   },
+   "content_scripts": [ {
+      "css": [ "css/style.css" ],
+      "js": [ "js/vk-observer.js", "js/lastapi.js", "js/md5-min.js" ],
+      "matches": [ "*://vk.com/*", "*://*.vk.me/*" ],
+      "run_at": "document_end"
+   } ],
+   "content_security_policy": "script-src 'self' https://ws.audioscrobbler.com; object-src 'self'; style-src 'self' 'unsafe-inline';",
+   "description": "Загрузка музыки и видео, скробблинг из социальной сети Вконтакте.",
+   "icons": {
+      "128": "images/128x128.png",
+      "32": "images/32x32.png",
+      "48": "images/48x48.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw1oJcjrOgu1EdVcAjGPcdIt6ubQbM+42UlW4tmHDMTpc8yuR4RqVYs4chA8jYZkAFrwmU+UKJzFWU4Orb037PW1zS6l+U4xUpgcWMwHJCUfRkEzu60ks2E/8L83u70jjs45aEzzraxuIfy0uc/5JG0WLzd3XuurcY617KwM3PTpwC9amrHJy2uS4SIizy2uQEEak8rbgjk6XFDjuEQ0qEZNVpDaa/KxGYuxXk4IIHqTwUPwz5egReHRX72BwRZvbILbUQRJ/jS/n9hjRQaEzU5Y6QRfGIyHtYTiKx/ocKvLb/yvkYRGhaeA+SwmkfXf/KPpIsUaWTeP1T+7muyUDuwIDAQAB",
+   "manifest_version": 2,
+   "minimum_chrome_version": "20",
+   "name": "VK Observer",
+   "permissions": [ "*://vk.com/*", "*://*.vk.me/*", "storage", "tabs", "unlimitedStorage" ],
+   "update_url": "https://clients2.google.com/service/update2/crx",
+   "version": "1.7.6",
+   "web_accessible_resources": [ "lastauth.html" ]
+}
