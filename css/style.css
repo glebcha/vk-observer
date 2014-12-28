@@ -43,14 +43,12 @@
     background-position-x: 100%;
 }
 
-.download-all-link:hover,
-.arr_div ul li a {
+.download-all-link:hover {
     opacity: 1;
     text-decoration: none;
 }
 
-.bitrate,
-.arr_div ul li {
+.bitrate {
     color: #2B587A;
     background-color: #EDF1F5;
     border-radius: 2px;
@@ -67,12 +65,6 @@
 .bitrate > span {
     font-size: 10px;
     padding-left: 10px;
-}
-
-.arr_div ul li:hover {
-    font-size: 12px;
-    background: rgb(192, 207, 223);
-    transition: all 0.5s ease-in-out;
 }
 
 #audio.new .audio_add_wrap, 
@@ -120,7 +112,13 @@
     display: block;
 }
 
+embed {
+    width: 100%;
+}
+
 .arr_div {
+    float: left;
+    width: 100%;
     padding-top: 15px;
 }
 
@@ -132,9 +130,9 @@
 
 .arr_div ul li {
     display: inline-block;
-    margin: 5px 0;
+    vertical-align: top;
+    margin: 5px 5px 5px 0;
     padding: 5px 0;
-    min-width: 100%;
     text-align: center;
 }
 

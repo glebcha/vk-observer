@@ -1,5 +1,6 @@
 var vkObserver = {
     clearStorage: function() {
+        "use strict";
         chrome.storage.sync.clear();
         chrome.storage.sync.set({
             'settings': {
@@ -11,6 +12,7 @@ var vkObserver = {
     },
 
     syncStorage: function() {
+        "use strict";
         var storage = chrome.storage.sync;
         storage.get('settings', function(data) {
             var storVal = data.settings;
@@ -43,30 +45,32 @@ var vkObserver = {
     },
 
     showA: function(audios) {
-        var audioBlocks = audios || document.querySelectorAll('.audio');
-        var noBubbling = function(event) {
-            event.stopPropagation();
-        };
+        "use strict";
+        var audioBlocks = audios || document.querySelectorAll('.audio'),
+            noBubbling = function(event) {
+                event.stopPropagation();
+            };
 
         var getblob = function(event) {
-            var el = event.target;
-            var wrap = el.parentNode;
-            var url = el.href;
-            var downloadBtn = wrap.querySelector('.download-link');
-            var cacheStatus = localStorage.VkObserver_cache;
+            "use strict";
+            var el = event.target,
+                wrap = el.parentNode,
+                url = el.href,
+                downloadBtn = wrap.querySelector('.download-link'),
+                cacheStatus = localStorage.VkObserver_cache;
             if (cacheStatus == 'enabled') {
                 event.preventDefault();
                 event.stopPropagation();
-                var winUrl = window.URL || window.webkitURL;
-                var xhr = new XMLHttpRequest();
+                var winUrl = window.URL || window.webkitURL,
+                    xhr = new XMLHttpRequest();
                 xhr.responseType = 'blob';
                 downloadBtn.style.display = 'none';
                 var statusBlock = document.createElement('span');
                 statusBlock.className = 'cached-status';
                 wrap.appendChild(statusBlock);
                 xhr.onprogress = function(completion) {
-                    var cachedCompletion = Math.floor(completion.loaded / completion.total * 100);
-                    var cachedPercent = cachedCompletion + '%';
+                    var cachedCompletion = Math.floor(completion.loaded / completion.total * 100),
+                        cachedPercent = cachedCompletion + '%';
                     statusBlock.innerHTML = '';
                     statusBlock.innerHTML = cachedPercent;
                     if (cachedPercent == '100%') {
@@ -96,10 +100,10 @@ var vkObserver = {
         var displayBitrate = function(event) {
             event.preventDefault();
             var audioContainer = this;
-            var linkBtn = audioContainer.querySelector('.play_btn_wrap');
-            var audioLink = linkBtn.parentNode.querySelector('input').value.split('?').splice(0, 1).toString();
-            var audioDurationSeconds = audioContainer.querySelector('.duration').dataset.duration;
-            var bitrateStatus = localStorage.VkObserver_bitrate;
+            var linkBtn = audioContainer.querySelector('.play_btn_wrap'),
+                audioLink = linkBtn.parentNode.querySelector('input').value.split('?').splice(0, 1).toString(),
+                audioDurationSeconds = audioContainer.querySelector('.duration').dataset.duration,
+                bitrateStatus = localStorage.VkObserver_bitrate;
             var bitRate = function(callback) {
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.overrideMimeType('text/xml');
@@ -124,8 +128,8 @@ var vkObserver = {
             if (bitrateStatus == 'enabled') {
                 bitRate(
                     function(response) {
-                        var fileRate = response[0];
-                        var fileSize = response[1];
+                        var fileRate = response[0],
+                            fileSize = response[1];
                         if (!audioContainer.querySelector('.bitrate')) {
                             var text;
                             if (isNaN(fileRate) === true) {
@@ -144,18 +148,18 @@ var vkObserver = {
         };
         if (audioBlocks.length > 0) {
             for (var i = 0; i < audioBlocks.length; i++) {
-                var audioBlock = audioBlocks[i];
-                var btn = audioBlock.querySelector('.play_btn_wrap');
-                var btnPlay = btn.querySelector('.play_new');
+                var audioBlock = audioBlocks[i],
+                    btn = audioBlock.querySelector('.play_btn_wrap'),
+                    btnPlay = btn.querySelector('.play_new');
                 if (!btn.querySelector('.download-link')) {
-                    var getLink = btn.parentNode.querySelector('input').value.split('?').splice(0, 1).toString();
-                    var audioTitle = audioBlock.querySelector('.title_wrap.fl_l .title').innerText;
-                    var audioArtist = audioBlock.querySelector('.title_wrap.fl_l').firstElementChild.firstElementChild.innerText;
-                    var audioName = audioArtist + "-" + audioTitle;
-                    var audioFullName = audioName.replace(/\./g, '');
-                    var audioDurationBlock = audioBlock.querySelector('.duration');
-                    var audioDurationText = audioDurationBlock.innerText.split(':');
-                    var audioDurationSeconds = audioDurationText[0] * 60 + parseInt(audioDurationText[1], 10);
+                    var getLink = btn.parentNode.querySelector('input').value.split('?').splice(0, 1).toString(),
+                        audioTitle = audioBlock.querySelector('.title_wrap.fl_l .title').innerText,
+                        audioArtist = audioBlock.querySelector('.title_wrap.fl_l').firstElementChild.firstElementChild.innerText,
+                        audioName = audioArtist + "-" + audioTitle,
+                        audioFullName = audioName.replace(/\./g, ''),
+                        audioDurationBlock = audioBlock.querySelector('.duration'),
+                        audioDurationText = audioDurationBlock.innerText.split(':'),
+                        audioDurationSeconds = audioDurationText[0] * 60 + parseInt(audioDurationText[1], 10);
                     audioDurationBlock.setAttribute('data-duration', audioDurationSeconds);
                     var d = document.createElement('a');
                     d.className = 'download-link';
@@ -172,7 +176,7 @@ var vkObserver = {
     },
 
     getA: function(entries) {
-
+        "use strict";
         var posts = entries || document.querySelectorAll('.post');
         var getAllAudios = function(event) {
             event.preventDefault();
@@ -201,11 +205,12 @@ var vkObserver = {
     },
 
     pageM: function() {
-        var page = document.querySelector('#page_body.fl_r');
-        var pageConfig = {
-            childList: true,
-            subtree: true
-        };
+        "use strict";
+        var page = document.querySelector('#page_body.fl_r'),
+            pageConfig = {
+                childList: true,
+                subtree: true
+            };
 
         var pageObserver = new window.WebKitMutationObserver(
 
@@ -224,82 +229,83 @@ var vkObserver = {
     },
 
     showV: function(main, box) {
+        "use strict";
         var videoWrap = document.querySelector('#mv_layer_wrap');
         var parent = main || videoWrap;
         if (parent) {
-            var videoBox = box || videoWrap.querySelector('.video_box');
-            var quality = [240, 360, 480, 720];
-            var reg = new RegExp(quality.join("|"), "i");
+            var videoBox = box || videoWrap.querySelector('.video_box'),
+                quality = [240, 360, 480, 720],
+                reg = new RegExp(quality.join("|"), "i");
 
             if (videoBox) {
-                var sideBar = parent.querySelector('#mv_narrow');
-                var videoTitle = parent.querySelector('.mv_min_title').innerText;
-                var el = document.createElement('div');
+                var sideBar = parent.querySelector('.mv_share_actions'),
+                    videoTitle = parent.querySelector('.mv_min_title').innerText,
+                    el = document.createElement('div');
                 el.className = 'arr_div';
                 if (!sideBar.querySelector('.arr_div')) {
                     sideBar.appendChild(el);
                 }
-                var html5 = videoBox.querySelector('video');
-                var embed = videoBox.querySelector('embed');
+                var html5 = videoBox.querySelector('video'),
+                    embed = videoBox.querySelector('embed');
                 if (html5) {
-                    var sourceString = html5.getAttribute('src').split('mp4').slice(0, 1).toString() + "mp4";
-                    var videoDownload = document.createElement('a');
-                    videoDownload.className = 'html5-video';
-                    videoDownload.href = sourceString;
-                    videoDownload.setAttribute('download', videoTitle);
-                    videoDownload.innerHTML = '<span class="download-icon"></span>Загрузить видео';
+                    var sourceString = html5.getAttribute('src').split('mp4').slice(0, 1).toString() + "mp4",
+                        videoDownload = document.createElement('a');
+                        videoDownload.className = 'html5-video';
+                        videoDownload.href = sourceString;
+                        videoDownload.setAttribute('download', videoTitle);
+                        videoDownload.innerHTML = '<span class="download-icon"></span>Загрузить видео';
                     el.appendChild(videoDownload);
                 } else {
                     if (!embed) {
                         return;
                     } else {
-                        var arr = embed.getAttribute('flashvars').split('url');
-                        var newArr = arr.filter(function(arg) {
-                            return arg.match(reg);
-                        });
-                        var filtered = newArr.join().split(/=|extra|%3F/);
-                        var urlArr = filtered.filter(function(val) {
-                            return val.match(/http|https/);
-                        });
-                        var filteredUrlArr = urlArr.map(function(item) {
-                            return decodeURIComponent(item);
-                        });
-                        var cleanUrlArr = filteredUrlArr.filter(function(url) {
-                            return url.match(/mp4/);
-                        });
-                        var noDupsUrls = (function() {
-                            var newArr = [];
-                            for (var i = 0; i < quality.length; i++) {
-                                var q = quality[i];
-                                for (var k = 0; k < cleanUrlArr.length; k++) {
-                                    var a = cleanUrlArr[k];
-                                    if (a.indexOf(q) > 0) {
-                                        newArr.push(a);
-                                        break;
+                        var arr = embed.getAttribute('flashvars').split('url'),
+                            newArr = arr.filter(function(arg) {
+                                return arg.match(reg);
+                            }),
+                            filtered = newArr.join().split(/=|extra|%3F/),
+                            urlArr = filtered.filter(function(val) {
+                                return val.match(/http|https/);
+                            }),
+                            filteredUrlArr = urlArr.map(function(item) {
+                                return decodeURIComponent(item);
+                            }),
+                            cleanUrlArr = filteredUrlArr.filter(function(url) {
+                                return url.match(/mp4/);
+                            }),
+                            noDupsUrls = (function() {
+                                var newArr = [];
+                                for (var i = 0; i < quality.length; i++) {
+                                    var q = quality[i];
+                                    for (var k = 0; k < cleanUrlArr.length; k++) {
+                                        var a = cleanUrlArr[k];
+                                        if (a.indexOf(q) > 0) {
+                                            newArr.push(a);
+                                            break;
+                                        }
                                     }
                                 }
-                            }
-                            return newArr;
-                        })();
-                        var htmlUrls = noDupsUrls.map(function(link) {
-                            var finalVideoQuality = '';
-                            var videoQuality = link.match(reg);
-                            if (videoQuality == 240) {
-                                finalVideoQuality = 'низкое (' + videoQuality + ')';
-                            } else if (videoQuality == 360) {
-                                finalVideoQuality = 'низкое (' + videoQuality + ')';
-                            } else if (videoQuality == 480) {
-                                finalVideoQuality = 'среднее (' + videoQuality + ')';
-                            } else if (videoQuality == 720) {
-                                finalVideoQuality = 'высокое (' + videoQuality + ')';
-                            } else {
-                                finalVideoQuality = videoQuality;
-                            }
+                                return newArr;
+                            })(),
+                            htmlUrls = noDupsUrls.map(function(link) {
+                                var finalVideoQuality = '',
+                                    videoQuality = link.match(reg);
+                                if (videoQuality == 240) {
+                                    finalVideoQuality = 'низкое (' + videoQuality + ')';
+                                } else if (videoQuality == 360) {
+                                    finalVideoQuality = 'низкое (' + videoQuality + ')';
+                                } else if (videoQuality == 480) {
+                                    finalVideoQuality = 'среднее (' + videoQuality + ')';
+                                } else if (videoQuality == 720) {
+                                    finalVideoQuality = 'высокое (' + videoQuality + ')';
+                                } else {
+                                    finalVideoQuality = videoQuality;
+                                }
 
-                            return '<li><span class="download-icon"></span><a href="' + link + '" download="' + videoTitle + '">качество - ' + finalVideoQuality + '</a></li>';
-                        });
-                        var uArr = document.createElement('ul');
-                        uArr.innerHTML = htmlUrls.join('');
+                                return '<li><a href="' + link + '" download="' + videoTitle + '" class="flat_button">качество - ' + finalVideoQuality + '</a></li>';
+                            }),
+                            uArr = document.createElement('ul');
+                            uArr.innerHTML = htmlUrls.join('');
                         el.appendChild(uArr);
 
                     }
@@ -309,18 +315,18 @@ var vkObserver = {
     },
 
     scrobbler: function(songArtist, songTitle, statusIcon) {
-        var scrobbleStatus = localStorage.VkObserver_scrobble;
-        var storage = chrome.storage.sync;
-        
+        "use strict";
+        var scrobbleStatus = localStorage.VkObserver_scrobble,
+            storage = chrome.storage.sync;
                                 
         storage.get('lastkeys', function(data) {
-            var apiKey = data.lastkeys.api;
-            var apiSecret = data.lastkeys.secret;
-            var ts = Math.floor(new Date().getTime()/1000);
-            var lastfm = new LastFM({
-                apiKey: apiKey,
-                apiSecret: apiSecret
-            });
+            var apiKey = data.lastkeys.api,
+                apiSecret = data.lastkeys.secret,
+                ts = Math.floor(new Date().getTime()/1000),
+                lastfm = new LastFM({
+                    apiKey: apiKey,
+                    apiSecret: apiSecret
+                });
             
             storage.get('lastsession', function(data) {
                 var sk = data.lastsession;
@@ -336,8 +342,7 @@ var vkObserver = {
 
                 if (scrobbleStatus == 'enabled' && songArtist !== null && songArtist !== undefined) {
                     startScrobble();
-                }
-
+                } 
             });
 
         });
@@ -346,38 +351,39 @@ var vkObserver = {
 
 
     likeSong: function(songArtist, songTitle, likeIcon) {
-        var scrobbleStatus = localStorage.VkObserver_scrobble;
-        var storage = chrome.storage.sync;
+        "use strict";
+        var scrobbleStatus = localStorage.VkObserver_scrobble,
+            storage = chrome.storage.sync;
                                 
         storage.get('lastkeys', function(data) {
-            var apiKey = data.lastkeys.api;
-            var apiSecret = data.lastkeys.secret;
-            var ts = Math.floor(new Date().getTime()/1000);
-            var lastfm = new LastFM({
-                apiKey: apiKey,
-                apiSecret: apiSecret
-            });
+            var apiKey = data.lastkeys.api,
+                apiSecret = data.lastkeys.secret,
+                ts = Math.floor(new Date().getTime()/1000),
+                lastfm = new LastFM({
+                    apiKey: apiKey,
+                    apiSecret: apiSecret
+                });
             
             storage.get('lastsession', function(data) {
                 var sk = data.lastsession;
                 var like = function() {
-                    lastfm.track.love({artist: songArtist, track: songTitle}, {key: sk}, {success: function(data){
-                        likeIcon.className = 'liked';
-                        likeIcon.setAttribute('title', 'добавлено в любимые');
-                        //console.log("Добавлен в любимые! " + songArtist + " " + songTitle);
-                    }, error: function(code, message){
-                        console.log("Ошибка: " + message + " код: " + code);
-                    }});
-                };
-                var unlike = function() {
-                    lastfm.track.unlove({artist: songArtist, track: songTitle}, {key: sk}, {success: function(data){
-                        likeIcon.className = 'unliked';
-                        likeIcon.setAttribute('title', 'удалено из любимых');
-                        //console.log("Удален из любимых! " + songArtist + " " + songTitle);
-                    }, error: function(code, message){
-                        console.log("Ошибка: " + message + " код: " + code);
-                    }});
-                };
+                        lastfm.track.love({artist: songArtist, track: songTitle}, {key: sk}, {success: function(data){
+                            likeIcon.className = 'liked';
+                            likeIcon.setAttribute('title', 'добавлено в любимые');
+                            //console.log("Добавлен в любимые! " + songArtist + " " + songTitle);
+                        }, error: function(code, message){
+                            console.log("Ошибка: " + message + " код: " + code);
+                        }});
+                    },
+                    unlike = function() {
+                        lastfm.track.unlove({artist: songArtist, track: songTitle}, {key: sk}, {success: function(data){
+                            likeIcon.className = 'unliked';
+                            likeIcon.setAttribute('title', 'удалено из любимых');
+                            //console.log("Удален из любимых! " + songArtist + " " + songTitle);
+                        }, error: function(code, message){
+                            console.log("Ошибка: " + message + " код: " + code);
+                        }});
+                    };
 
                 if (scrobbleStatus == 'enabled' && songArtist !== null && songArtist !== undefined && likeIcon.className !== 'changed') {
                     if(likeIcon.className !== 'liked' || likeIcon.className === 'unliked') {
@@ -394,21 +400,22 @@ var vkObserver = {
     },
 
     bodyM: function() {
-        var checker;
-        var body = document.body;
-        var bodyConfig = {
-            childList: true,
-            subtree: true
-        };
+        "use strict";
+        var checker,
+            body = document.body,
+            bodyConfig = {
+                childList: true,
+                subtree: true
+            };
 
         var bodyObserver = new window.WebKitMutationObserver(
 
             function(mutations) {
                 mutations.forEach(function(mutation) {
-                    var node = mutation.target;
-                    var playlist = node.querySelector('#pad_playlist_panel');
-                    var b = node.querySelector('#mv_layer_wrap');
-                    var ticker = node.querySelector('#audio_global');
+                    var node = mutation.target,
+                        playlist = node.querySelector('#pad_playlist_panel'),
+                        b = node.querySelector('#mv_layer_wrap'),
+                        ticker = node.querySelector('#audio_global');
 
                     if (b) {
 
@@ -446,16 +453,18 @@ var vkObserver = {
                     }
 
                     if (ticker) {
+                        var lastContainer = ticker.querySelector('.last-controls'),
+                            iconL = ticker.querySelector('#like-icon');
 
                         setTimeout(function(){
                             localStorage.vkObserver_title = ticker.querySelector('#gp_title').innerText;
                             localStorage.vkObserver_artist = ticker.querySelector('#gp_performer').innerText;
                         }, 2000);
                         
-                        if(!ticker.querySelector('.last-controls')){
-                            var lastControls = document.createElement('div');
-                            var scrobbleIcon = document.createElement('div');
-                            var likeIcon = document.createElement('div');
+                        if(!lastContainer){
+                            var lastControls = document.createElement('div'),
+                                scrobbleIcon = document.createElement('div'),
+                                likeIcon = document.createElement('div');
                             lastControls.className = 'last-controls';
                             scrobbleIcon.id = 'scrobble-icon';
                             likeIcon.id = 'like-icon';
@@ -464,18 +473,25 @@ var vkObserver = {
                             ticker.appendChild(lastControls);
                         }
 
-                        var iconL = ticker.querySelector('#like-icon');
                         ticker.onclick = function(){
                             vkObserver.likeSong(localStorage.vkObserver_artist, localStorage.vkObserver_title, iconL);
                         };
                         
                         var tickerObs = new MutationObserver(function(mutations, observer) {
                             for(var k = 0; k < mutations.length; k++) {        
-                                var playing = mutations[k].target;
-                                var artist = playing.parentNode.querySelector('#gp_performer');  
-                                var title = playing.parentNode.querySelector('#gp_title');
-                                var iconStatus = ticker.querySelector('#scrobble-icon');
-                                var iconLike = ticker.querySelector('#like-icon');
+                                var playing = mutations[k].target,
+                                    artist = playing.parentNode.querySelector('#gp_performer'),  
+                                    title = playing.parentNode.querySelector('#gp_title'),
+                                    iconStatus = ticker.querySelector('#scrobble-icon'),
+                                    iconLike = ticker.querySelector('#like-icon');
+                                
+                                if (localStorage.VkObserver_scrobble !== 'disabled'){
+                                    iconStatus.style.visibility = 'visible';
+                                    iconLike.style.visibility = 'visible';
+                                } else {
+                                    iconStatus.style.visibility = 'hidden';
+                                    iconLike.style.visibility = 'hidden';
+                                }
 
                                 if (title.innerText !== localStorage.vkObserver_title) {
                                     window.clearTimeout(checker);
