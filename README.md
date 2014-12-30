@@ -39,7 +39,7 @@ https://chrome.google.com/webstore/detail/vk-observer/piiadkppcjhcjnekceedinjida
 * * *
 ![Screenshot1](http://lite.glebcha.ru/img/vkobserver-styled-7.png)
 * * *
-![Screenshot2](http://lite.glebcha.ru/img/vkobserver-styled-5.png)
+![Screenshot2](http://lite.glebcha.ru/img/vkobserver-video.png)
 * * *
 ![Screenshot3](http://lite.glebcha.ru/img/vkobserver-styled-2.png)
 
