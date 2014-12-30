@@ -116,6 +116,11 @@ embed {
     width: 100%;
 }
 
+#mv_box {
+    width: auto;
+    max-width: 785px;
+}
+
 .arr_div {
     float: left;
     width: 100%;
