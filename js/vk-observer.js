@@ -289,20 +289,26 @@ var vkObserver = {
                             })(),
                             htmlUrls = noDupsUrls.map(function(link) {
                                 var finalVideoQuality = '',
-                                    videoQuality = link.match(reg);
-                                if (videoQuality == 240) {
-                                    finalVideoQuality = 'низкое (' + videoQuality + ')';
-                                } else if (videoQuality == 360) {
-                                    finalVideoQuality = 'низкое (' + videoQuality + ')';
-                                } else if (videoQuality == 480) {
-                                    finalVideoQuality = 'среднее (' + videoQuality + ')';
-                                } else if (videoQuality == 720) {
-                                    finalVideoQuality = 'высокое (' + videoQuality + ')';
-                                } else {
-                                    finalVideoQuality = videoQuality;
-                                }
+                                    videoQuality = link.match(reg)[0];
+                                switch (videoQuality) {
+                                	case '240':
+                                		finalVideoQuality = 'плохое качество (' + videoQuality + ')';
+                                		break;
+                                	case '360':
+                                		finalVideoQuality = 'низкое качество (' + videoQuality + ')';
+                                		break;
+                                	case '480':
+                                		finalVideoQuality = 'среднее качество (' + videoQuality + ')';
+                                		break;
+                                	case '720': 
+                                		finalVideoQuality = 'высокое качество (' + videoQuality + ')';
+                                		break;
+                                	default:
+                                		finalVideoQuality = 'качество (' + videoQuality + ')';
+                                		break;
+                                }   
 
-                                return '<li><a href="' + link + '" download="' + videoTitle + '" class="flat_button">качество - ' + finalVideoQuality + '</a></li>';
+                                return '<li><a href="' + link + '" download="' + videoTitle + '" class="flat_button">' + finalVideoQuality + '</a></li>';
                             }),
                             uArr = document.createElement('ul');
                             uArr.innerHTML = htmlUrls.join('');
