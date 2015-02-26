@@ -35,11 +35,11 @@ https://chrome.google.com/webstore/detail/vk-observer/piiadkppcjhcjnekceedinjida
 * еще больше Last.fm 
 
 ###Скриншоты:
-![Screenshot0](http://lite.glebcha.ru/img/vkobserver-styled-6.png)
+![Screenshot0](http://aviaps.ru/images/vkobserver-last.png)
 * * *
-![Screenshot1](http://lite.glebcha.ru/img/vkobserver-styled-7.png)
+![Screenshot1](http://aviaps.ru/images/vkobserver-settings.png)
 * * *
-![Screenshot2](http://lite.glebcha.ru/img/vkobserver-video.png)
+![Screenshot2](http://aviaps.ru/images/vkobserver-video.png)
 * * *
-![Screenshot3](http://lite.glebcha.ru/img/vkobserver-styled-2.png)
+![Screenshot3](http://aviaps.ru/images/vkobserver-list.png)
 
