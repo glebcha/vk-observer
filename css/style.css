@@ -32,6 +32,14 @@
     transition: all 0.3s ease-in-out;
 }
 
+.wall_audio .download-all-link {
+    position: relative;
+}
+
+.wall_audio .download-all-link .download-tooltip {
+    right: -5px; 
+}
+
 .download-all-link {
     display: block;
     color: #2B587A;
