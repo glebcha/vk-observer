@@ -188,8 +188,11 @@ var vkObserver = {
         };
 
         for (var i = 0; i < posts.length; i++) {
-            var post = posts[i];
-            var wallText = post.querySelector('.wall_text');
+            var post = posts[i],
+                wallText = post.querySelector('.wall_text');
+            if(wallText === null) {
+                wallText = post;
+            }
             if (post !== undefined && post !== null) {
                 if (wallText.querySelectorAll('.audio').length > 1) {
                     var btn = document.createElement('a');
@@ -292,21 +295,21 @@ var vkObserver = {
                                 var finalVideoQuality = '',
                                     videoQuality = link.match(reg)[0];
                                 switch (videoQuality) {
-                                	case '240':
-                                		finalVideoQuality = 'плохое качество (' + videoQuality + ')';
-                                		break;
-                                	case '360':
-                                		finalVideoQuality = 'низкое качество (' + videoQuality + ')';
-                                		break;
-                                	case '480':
-                                		finalVideoQuality = 'среднее качество (' + videoQuality + ')';
-                                		break;
-                                	case '720': 
-                                		finalVideoQuality = 'высокое качество (' + videoQuality + ')';
-                                		break;
-                                	default:
-                                		finalVideoQuality = 'качество (' + videoQuality + ')';
-                                		break;
+                                    case '240':
+                                        finalVideoQuality = 'плохое качество (' + videoQuality + ')';
+                                        break;
+                                    case '360':
+                                        finalVideoQuality = 'низкое качество (' + videoQuality + ')';
+                                        break;
+                                    case '480':
+                                        finalVideoQuality = 'среднее качество (' + videoQuality + ')';
+                                        break;
+                                    case '720': 
+                                        finalVideoQuality = 'высокое качество (' + videoQuality + ')';
+                                        break;
+                                    default:
+                                        finalVideoQuality = 'качество (' + videoQuality + ')';
+                                        break;
                                 }   
 
                                 return '<li><a href="' + link + '" download="' + videoTitle + '" class="flat_button">' + finalVideoQuality + '</a></li>';
@@ -422,7 +425,7 @@ var vkObserver = {
                     var node = mutation.target,
                         playlist = node.querySelector('#pad_playlist_panel'),
                         v = node.querySelector('#mv_layer_wrap'),
-                        m = node.querySelector('#wk_layer_wrap .post_media'),
+                        m = node.querySelector('#wk_layer_wrap '),
                         ticker = node.querySelector('#audio_global');
 
                     if (v) {
@@ -445,6 +448,7 @@ var vkObserver = {
 
                     if (m) {
                         vkObserver.showA(m.querySelectorAll('.audio'));
+                        vkObserver.getA(m.querySelectorAll('.wall_audio'));
                     } 
 
                     if (playlist) {
