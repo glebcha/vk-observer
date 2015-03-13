@@ -50,7 +50,6 @@ var vkObserver = {
             noBubbling = function(event) {
                 event.stopPropagation();
             };
-
         var getblob = function(event) {
             "use strict";
             var el = event.target,
@@ -110,14 +109,16 @@ var vkObserver = {
 
                 xmlhttp.onreadystatechange = function() {
                     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                        var size = xmlhttp.getResponseHeader('Content-Length');
-                        var sizeLong = Math.floor(size / 1024) / 1024;
-                        var sizeShort = sizeLong.toFixed(1);
-                        var kbit = size / 128;
-                        var kbps = Math.ceil(Math.round(kbit / audioDurationSeconds) / 16) * 16;
+                        var size = xmlhttp.getResponseHeader('Content-Length'),
+                            sizeLong = Math.floor(size / 1024) / 1024,
+                            sizeShort = sizeLong.toFixed(1),
+                            kbit = size / 128,
+                            kbps = Math.ceil(Math.round(kbit / audioDurationSeconds) / 16) * 16;
+
                         if (kbps > 320) {
                             kbps = 320;
                         }
+
                         callback([kbps, sizeShort]);
                     }
                 };
@@ -216,10 +217,10 @@ var vkObserver = {
 
         function(mutations) {
             mutations.forEach(function(mutation) {
-                var node = mutation.target;
-                var audios = node.querySelectorAll('.audio');
+                var node = mutation.target, 
+                    audios = node.querySelectorAll('.audio'),
+                    blocks = node.querySelectorAll('.post');
                 vkObserver.showA(audios);
-                var blocks = node.querySelectorAll('.post');
                 vkObserver.getA(blocks); 
             });
 
@@ -420,34 +421,39 @@ var vkObserver = {
                 mutations.forEach(function(mutation) {
                     var node = mutation.target,
                         playlist = node.querySelector('#pad_playlist_panel'),
-                        b = node.querySelector('#mv_layer_wrap'),
+                        v = node.querySelector('#mv_layer_wrap'),
+                        m = node.querySelector('#wk_layer_wrap .post_media'),
                         ticker = node.querySelector('#audio_global');
 
-                    if (b) {
+                    if (v) {
 
                         var bObserver = new window.WebKitMutationObserver(
 
                             function(mutations) {
                                 mutations.forEach(function(mutation) {
-                                    var node = mutation.target;
-                                    var videoBox = node.querySelector('.video_box');
-                                    vkObserver.showV(b, videoBox);
+                                    var node = mutation.target,
+                                        videoBox = node.querySelector('.video_box');
+                                    vkObserver.showV(v, videoBox);
                                 });
                             });
-                        var bConfig = {
+                        var vConfig = {
                             childList: true,
                             subtree: true
                         };
-                        bObserver.observe(b, bConfig);
+                        vObserver.observe(v, vConfig);
                     }
+
+                    if (m) {
+                        vkObserver.showA(m.querySelectorAll('.audio'));
+                    } 
 
                     if (playlist) {
                         var playlistObserver = new window.WebKitMutationObserver(
 
                             function(mutations) {
                                 mutations.forEach(function(mutation) {
-                                    var node = mutation.target;
-                                    var audios = node.querySelectorAll('.audio');
+                                    var node = mutation.target,
+                                        audios = node.querySelectorAll('.audio');
                                     vkObserver.showA(audios);
                                 });
                             });
