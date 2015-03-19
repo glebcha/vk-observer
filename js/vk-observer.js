@@ -430,7 +430,7 @@ var vkObserver = {
 
                     if (v) {
 
-                        var bObserver = new window.WebKitMutationObserver(
+                        var vObserver = new window.WebKitMutationObserver(
 
                             function(mutations) {
                                 mutations.forEach(function(mutation) {
