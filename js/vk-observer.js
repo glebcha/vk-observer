@@ -98,8 +98,8 @@ var vkObserver = {
         };
         var displayBitrate = function(event) {
             event.preventDefault();
-            var audioContainer = this;
-            var linkBtn = audioContainer.querySelector('.play_btn_wrap'),
+            var audioContainer = this,
+                linkBtn = audioContainer.querySelector('.play_btn_wrap'),
                 audioLink = linkBtn.parentNode.querySelector('input').value.split('?').splice(0, 1).toString(),
                 audioDurationSeconds = audioContainer.querySelector('.duration').dataset.duration,
                 bitrateStatus = localStorage.VkObserver_bitrate;
@@ -151,8 +151,9 @@ var vkObserver = {
             for (var i = 0; i < audioBlocks.length; i++) {
                 var audioBlock = audioBlocks[i],
                     btn = audioBlock.querySelector('.play_btn_wrap'),
-                    btnPlay = btn.querySelector('.play_new');
-                if (!btn.querySelector('.download-link')) {
+                    btnPlay = btn.querySelector('.play_new'),
+                    linkContainer = btn.parentNode.querySelector('input').value;
+                if (!btn.querySelector('.download-link') && linkContainer.indexOf('mp3') > 0) {
                     var getLink = btn.parentNode.querySelector('input').value.split('?').splice(0, 1).toString(),
                         audioTitle = audioBlock.querySelector('.title_wrap.fl_l .title').innerText,
                         audioArtist = audioBlock.querySelector('.title_wrap.fl_l').firstElementChild.firstElementChild.innerText,
@@ -170,6 +171,8 @@ var vkObserver = {
                     d.addEventListener('click', getblob, false); 
                     btn.appendChild(d);
                     audioBlock.addEventListener('mouseover', displayBitrate, false);
+                } else if(linkContainer.indexOf('mp3') < 0 && audioBlock.className.indexOf('restricted') < 0) {
+                    audioBlock.className += ' restricted'
                 }
             }
         }

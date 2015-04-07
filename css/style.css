@@ -120,6 +120,29 @@
     display: block;
 }
 
+.restricted {
+    position: relative;
+    padding-bottom: 15px;
+}
+
+.restricted:before {
+  position: absolute;
+  top: 20%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #6383a8;
+  content: '';
+}
+
+.restricted:after {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: #6383a8;
+  content: 'Аудизапись удалена правообладателем';
+}
+
 embed {
     width: 100%;
 }
