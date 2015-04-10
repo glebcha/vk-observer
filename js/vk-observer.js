@@ -44,6 +44,28 @@ var vkObserver = {
         });
     },
 
+    findClosest: function(el, selector) {
+        var matchesFn;
+
+        ['matches','webkitMatchesSelector'].some(function(fn) {
+            if (typeof document.body[fn] == 'function') {
+                matchesFn = fn;
+                return true;
+            }
+            return false;
+        })
+
+        while (el!==null) {
+            parent = el.parentElement;
+            if (parent!==null && parent[matchesFn](selector)) {
+                return parent;
+            }
+            el = parent;
+        }
+
+        return null;
+    },
+
     showA: function(audios) {
         "use strict";
         var audioBlocks = audios || document.querySelectorAll('.audio'),
@@ -171,7 +193,7 @@ var vkObserver = {
                     d.addEventListener('click', getblob, false); 
                     btn.appendChild(d);
                     audioBlock.addEventListener('mouseover', displayBitrate, false);
-                } else if(linkContainer.indexOf('mp3') < 0 && audioBlock.className.indexOf('restricted') < 0) {
+                } else if(!vkObserver.findClosest(audioBlock, '.feed_row') && linkContainer.indexOf('mp3') < 0 && audioBlock.className.indexOf('restricted') < 0) {
                     audioBlock.className += ' restricted'
                 }
             }
