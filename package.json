@@ -1,0 +1,18 @@
+{
+  "name": "gulp-quick-start",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulp",
+  "repository": {
+    "type": "git",
+    "url": "https://gist.github.com/glebcha/27310a9fe5af174de825"
+  },
+  "author": "Glebcha",
+  "license": "MIT",
+  "homepage": "https://gist.github.com/glebcha/27310a9fe5af174de825",
+  "dependencies": {},
+  "scripts": {
+    "preinstall": "npm i -g gulp gulp-clean gulp-cache gulp-size gulp-concat gulp-jade gulp-minify-css gulp-jshint gulp-less gulp-uglify gulp-base64 gulp-rename gulp-imagemin gulp-notify gulp-sourcemaps gulp-babel babel-preset-es2015 browserify babelify browser-sync event-stream vinyl-source-stream",
+    "postinstall": "npm link gulp gulp-clean gulp-cache gulp-size gulp-concat gulp-jade gulp-minify-css gulp-jshint gulp-less gulp-uglify gulp-base64 gulp-rename gulp-imagemin gulp-notify gulp-sourcemaps gulp-babel babel-preset-es2015 browserify babelify browser-sync event-stream vinyl-source-stream"
+  }
+}
