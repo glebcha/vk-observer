@@ -16,3 +16,10 @@ xcuserdata
 # svn & cvs
 .svn
 CVS
+
+node_modules
+css
+images
+js
+*.html
+
