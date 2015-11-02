@@ -58,7 +58,7 @@ class Audio extends vkObserver {
 
         };
 
-        let displayBitrate = function(event) {
+        function displayBitrate(event) {
             event.preventDefault();
             let audioContainer = this,
                 linkBtn = audioContainer.querySelector('.play_btn_wrap'),
