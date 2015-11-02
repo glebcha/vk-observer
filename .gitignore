@@ -18,8 +18,8 @@ xcuserdata
 CVS
 
 node_modules
-css
-images
-js
+/css
+/images
+/js
 *.html
 
