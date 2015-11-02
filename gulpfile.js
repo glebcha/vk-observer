@@ -1,25 +1,25 @@
 'use strict';
 
 const gulp = require('gulp'),
-	cache = require('gulp-cache'),
-	clean = require('gulp-clean'),
-	stream = require('event-stream'),
+    cache = require('gulp-cache'),
+    clean = require('gulp-clean'),
+    stream = require('event-stream'),
     browserSync = require('browser-sync'),
     sourcemaps = require('gulp-sourcemaps'),
     babel = require('gulp-babel'),
     browserify = require('browserify'),
     babelify = require('babelify'),
     source = require('vinyl-source-stream'),
-	size = require('gulp-size'),
-	jshint = require('gulp-jshint'),
-	concat = require('gulp-concat'),
-	uglify = require('gulp-uglify'),
+    size = require('gulp-size'),
+    jshint = require('gulp-jshint'),
+    concat = require('gulp-concat'),
+    uglify = require('gulp-uglify'),
     minifyCSS = require('gulp-minify-css'),
     base64 = require('gulp-base64'),
-	less = require('gulp-less'),
+    less = require('gulp-less'),
     jade = require('gulp-jade'),
-	rename = require('gulp-rename'),
-	imagemin = require('gulp-imagemin'),
+    rename = require('gulp-rename'),
+    imagemin = require('gulp-imagemin'),
     notify = require("gulp-notify");
 
 gulp.task('html', () => {
@@ -36,7 +36,7 @@ gulp.task('html', () => {
 
 gulp.task('styles', () => {
     return gulp.src('source/less/*.less')
-    	.pipe(less())
+        .pipe(less())
         .on("error", notify.onError({
             message: 'LESS compile error: <%= error.message %>'
         }))
@@ -55,7 +55,7 @@ gulp.task('styles', () => {
 });
  
 gulp.task('scripts', () => {
-    let modules = browserify('source/js/app/app.js', {debug: false, presets: ["es2015"]})
+    let modules = browserify('source/js/app/app.js', {debug: true, presets: ["es2015"]})
         .transform(babelify)
         .bundle()
         .on("error", notify.onError({
@@ -67,21 +67,21 @@ gulp.task('scripts', () => {
             title: 'size of modules'
         }));
     let deps = gulp.src('source/js/libs/*')
-    	.pipe(concat('libs.js'))
+        .pipe(concat('libs.js'))
         .pipe(uglify())
-    	.pipe(gulp.dest('js'))
+        .pipe(gulp.dest('js'))
         .pipe(size({
             title: 'size of js dependencies'
         }));
     let pages = gulp.src('source/js/pages/*.js')
-        //.pipe(sourcemaps.init())
+        .pipe(sourcemaps.init())
         .pipe(babel({
             presets: ['es2015']
         }))
         .on("error", notify.onError({
             message: 'Babel error: <%= error.message %>'
         }))
-        //.pipe(sourcemaps.write())
+        .pipe(sourcemaps.write())
         .pipe(gulp.dest('js'))
         .pipe(size({
             title: 'size of modules'
