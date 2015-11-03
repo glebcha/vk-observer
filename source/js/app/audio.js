@@ -10,8 +10,8 @@ class Audio extends vkObserver {
 		audioBlocks = [].slice.call(audioBlocks);
 		
 		function noBubbling(event) {
-            event.stopPropagation();
-        }
+			event.stopPropagation();
+		}
 
 		function getblob(event) {
 			let el = event.target,
