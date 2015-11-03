@@ -76,7 +76,7 @@ window.onload = () => {
         switcherScrobble = document.querySelector('.switcher-scrobble'),
         toggleScrobble = document.querySelector('.toggle-scrobble');
 
-    let changeCache = function(event) {
+    let changeCache = (event) => {
         const storage = chrome.storage.sync;
         let bitrateStatus = '',
             scrobbleStatus = '';
@@ -113,7 +113,7 @@ window.onload = () => {
         });
     };
 
-    let changeBitrate = function(event) {
+    let changeBitrate = (event) => {
         const storage = chrome.storage.sync;
         let cacheStatus = '',
             scrobbleStatus = '';
@@ -150,7 +150,7 @@ window.onload = () => {
         });
     };
 
-    let changeScrobble = function(event) {
+    let changeScrobble = (event) => {
         const storage = chrome.storage.sync;
         let cacheStatus = '',
             bitrateStatus = '';
