@@ -8,10 +8,12 @@ class Audio extends vkObserver {
 	showA(audios) {
 		let audioBlocks = audios || document.querySelectorAll('.audio');
 		audioBlocks = [].slice.call(audioBlocks);
+		
+		function noBubbling(event) {
+            event.stopPropagation();
+        }
 
 		function getblob(event) {
-			event.stopPropagation();
-
 			let el = event.target,
 				wrap = el.parentNode,
 				url = el.href,
@@ -39,7 +41,7 @@ class Audio extends vkObserver {
 					}
 
 				};
-				xhr.onreadystatechange = (response) => {
+				xhr.onreadystatechange = function(response) {
 					if (xhr.readyState == 4 && xhr.status == 200) {
 						let blob = new window.Blob([this.response], {
 							'type': 'audio/mpeg'
@@ -133,7 +135,7 @@ class Audio extends vkObserver {
 					d.className = 'download-link';
 					d.href = getLink;
 					d.setAttribute('download', audioFullName);
-					//d.addEventListener('click', noBubbling, false);
+					d.addEventListener('click', noBubbling, false);
 					d.addEventListener('click', getblob, false); 
 					btn.appendChild(d);
 					audioBlock.addEventListener('mouseover', displayBitrate, false);
