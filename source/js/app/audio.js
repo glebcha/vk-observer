@@ -11,7 +11,7 @@ class Audio extends vkObserver {
 
         function getblob(event) {
             event.stopPropagation();
-            
+
             let el = event.target,
                 wrap = el.parentNode,
                 url = el.href,
@@ -71,8 +71,9 @@ class Audio extends vkObserver {
                 xmlhttp.overrideMimeType('text/xml');
 
                 xmlhttp.onreadystatechange = () => {
-                    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                        let size = xmlhttp.getResponseHeader('Content-Length'),
+                    if (xmlhttp.readyState == 4 && xmlhttp.status == 206) {
+                        let range = xmlhttp.getResponseHeader('Content-Range'),
++                           size = range.split('/').pop(),
                             sizeLong = Math.floor(size / 1024) / 1024,
                             sizeShort = sizeLong.toFixed(1),
                             kbit = size / 128,
@@ -85,7 +86,8 @@ class Audio extends vkObserver {
                         callback([kbps, sizeShort]);
                     }
                 };
-                xmlhttp.open("HEAD", audioLink, true);
+                xmlhttp.open("GET", audioLink, true);
+                xmlhttp.setRequestHeader('Range', 'bytes=0-1');
                 xmlhttp.send();
             };
 
