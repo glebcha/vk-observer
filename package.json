@@ -1,6 +1,6 @@
 {
   "name": "gulp-quick-start",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "",
   "main": "gulp",
   "repository": {
@@ -12,7 +12,10 @@
   "homepage": "https://gist.github.com/glebcha/27310a9fe5af174de825",
   "dependencies": {},
   "scripts": {
-    "preinstall": "npm i -g gulp gulp-clean gulp-cache gulp-size gulp-concat gulp-jade gulp-minify-css gulp-jshint gulp-less gulp-uglify gulp-base64 gulp-rename gulp-imagemin gulp-notify gulp-sourcemaps gulp-babel babel-preset-es2015 browserify babelify browser-sync event-stream vinyl-source-stream",
-    "postinstall": "npm link gulp gulp-clean gulp-cache gulp-size gulp-concat gulp-jade gulp-minify-css gulp-jshint gulp-less gulp-uglify gulp-base64 gulp-rename gulp-imagemin gulp-notify gulp-sourcemaps gulp-babel babel-preset-es2015 browserify babelify browser-sync event-stream vinyl-source-stream"
+    "preinstall": "npm i -g gulp gulp-rimraf gulp-cache gulp-size gulp-concat gulp-jade gulp-minify-css gulp-jshint gulp-less less-plugin-autoprefix gulp-base64 gulp-rename gulp-imagemin gulp-uglify gulp-notify browserify babelify babel-preset-es2015 browser-sync event-stream vinyl-source-stream gulp-sourcemaps",
+    "postinstall": "npm link gulp gulp-rimraf gulp-cache gulp-size gulp-concat gulp-jade gulp-minify-css gulp-jshint gulp-less less-plugin-autoprefix gulp-base64 gulp-rename gulp-imagemin gulp-uglify gulp-notify browserify babelify babel-preset-es2015 browser-sync event-stream vinyl-source-stream gulp-sourcemaps",
+    "prepare": "npm run preinstall && npm run postinstall",
+    "start": "NODE_ENV=production gulp && gulp watch",
+    "start-dev": "NODE_ENV=development gulp && gulp watch"
   }
 }

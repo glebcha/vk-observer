@@ -1,26 +1,29 @@
 'use strict';
 
-const gulp = require('gulp'),
-	cache = require('gulp-cache'),
-	clean = require('gulp-clean'),
-	stream = require('event-stream'),
-	browserSync = require('browser-sync'),
-	sourcemaps = require('gulp-sourcemaps'),
-	babel = require('gulp-babel'),
-	browserify = require('browserify'),
-	babelify = require('babelify'),
-	source = require('vinyl-source-stream'),
-	size = require('gulp-size'),
-	jshint = require('gulp-jshint'),
-	concat = require('gulp-concat'),
-	uglify = require('gulp-uglify'),
-	minifyCSS = require('gulp-minify-css'),
-	base64 = require('gulp-base64'),
-	less = require('gulp-less'),
-	jade = require('gulp-jade'),
-	rename = require('gulp-rename'),
-	imagemin = require('gulp-imagemin'),
-	notify = require("gulp-notify");
+const   env = process.env.NODE_ENV,
+		gulp = require('gulp'),
+		cache = require('gulp-cache'),
+		clean = require('gulp-rimraf'),
+		stream = require('event-stream'),
+		browserSync = require('browser-sync'),
+		browserify = require('browserify'),
+		babelify = require('babelify'),
+		uglify = require('gulp-uglify'),
+		source = require('vinyl-source-stream'),
+		sourcemaps = require('gulp-sourcemaps'),
+		size = require('gulp-size'),
+		jshint = require('gulp-jshint'),
+		concat = require('gulp-concat'),
+		minifyCSS = require('gulp-minify-css'),
+		base64 = require('gulp-base64'),
+		imagemin = require('gulp-imagemin'),
+		less = require('gulp-less'),
+		jade = require('gulp-jade'),
+		rename = require('gulp-rename'),
+		notify = require("gulp-notify"),
+		pluginAutoprefix = require('less-plugin-autoprefix');
+
+const autoprefix = new pluginAutoprefix({ browsers: ["Chrome >= 30"] });
 
 gulp.task('html', () => {
 	let localsObject = {};
@@ -36,16 +39,18 @@ gulp.task('html', () => {
 
 gulp.task('styles', () => {
 	return gulp.src('source/less/*.less')
-		.pipe(less())
+		.pipe(less({
+			plugins: [autoprefix]
+		}))
 		.on("error", notify.onError({
 			message: 'LESS compile error: <%= error.message %>'
 		}))
 		.pipe(base64({
-			extensions: ['jpg', 'png'],
-			maxImageSize: 32*1024 // max size in bytes, 32kb limit is strongly recommended due to IE limitations
+			extensions: ['jpg', 'png', 'svg'],
+			maxImageSize: 32*1024 
 		}))
 		.pipe(minifyCSS({
-			keepBreaks: false // New rule will have break if 'true'
+			keepBreaks: false 
 		}))
 		.pipe(gulp.dest('css'))
 		.pipe(size({
@@ -55,8 +60,10 @@ gulp.task('styles', () => {
 });
  
 gulp.task('scripts', () => {
-	let modules = browserify('source/js/app/app.js', {debug: true, presets: ["es2015"]})
-		.transform(babelify)
+	let modules = browserify('source/js/app/app.js', {
+			debug: env === "development" ? true : false
+		})
+		.transform(babelify, {presets: ["es2015"]})
 		.bundle()
 		.on("error", notify.onError({
 			message: 'Browserify error: <%= error.message %>'
