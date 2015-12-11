@@ -16,11 +16,18 @@ class Video {
             chrome.runtime.sendMessage(
                 {query: 'getvideo', url: url, name: name}, 
                 (response) => {
-                    console.log(response);
+                    //console.log(response);
                 }
             );
 
         };
+
+        chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+            if (request.query === 'downloadvideo') {
+                //console.log(request); -> fired multiple times - fix!
+                sendResponse({message: "done"});
+            }
+        });
 
         if (parent) {
             let videoBox = box || videoWrap.querySelector('.video_box'),
