@@ -52,9 +52,9 @@ let getOption = () => {
         }
         if (state.scrobble == 'disabled') {
             toggleScrobble.checked = false;
-        }  
+        }
 
-        
+
     });
     storage.get('lastkeys', (data) => {
         const keys = data.lastkeys;
@@ -170,11 +170,13 @@ window.onload = () => {
             var state = data.settings;
             if (state.scrobble == 'enabled') {
                 toggleScrobble.checked = false;
-                saveOption({
-                    "bitrate": bitrateStatus,
-                    "cache": cacheStatus,
-                    "scrobble": 'disabled'
-                });
+                storage.remove('lastsession', () => {
+                  saveOption({
+                      "bitrate": bitrateStatus,
+                      "cache": cacheStatus,
+                      "scrobble": 'disabled'
+                  });
+                })
             }
             if (state.scrobble == 'disabled') {
                 toggleScrobble.checked = true;
@@ -190,7 +192,7 @@ window.onload = () => {
             const sessionKey = data.lastsession;
             const apiKey = '488c3ca0fd22d7b5e8a0cd9650322d33';
             let apiUrl = 'http://www.lastfm.ru/api/auth?api_key=' + apiKey;
-             
+
             if (sessionKey === undefined) {
                 chrome.tabs.create({url:apiUrl});
             }
