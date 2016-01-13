@@ -10,12 +10,17 @@
   "author": "Glebcha",
   "license": "MIT",
   "homepage": "https://gist.github.com/glebcha/27310a9fe5af174de825",
-  "dependencies": {},
+  "dependencies": {
+    "babel": "^6.3.13"
+  },
   "scripts": {
     "preinstall": "npm i -g gulp gulp-rimraf gulp-cache gulp-size gulp-concat gulp-jade gulp-minify-css gulp-jshint gulp-less less-plugin-autoprefix gulp-base64 gulp-rename gulp-imagemin gulp-uglify gulp-notify browserify babelify babel-preset-es2015 browser-sync event-stream vinyl-source-stream gulp-sourcemaps",
     "postinstall": "npm link gulp gulp-rimraf gulp-cache gulp-size gulp-concat gulp-jade gulp-minify-css gulp-jshint gulp-less less-plugin-autoprefix gulp-base64 gulp-rename gulp-imagemin gulp-uglify gulp-notify browserify babelify babel-preset-es2015 browser-sync event-stream vinyl-source-stream gulp-sourcemaps",
     "prepare": "npm run preinstall && npm run postinstall",
     "start": "NODE_ENV=production gulp && gulp watch",
     "start-dev": "NODE_ENV=development gulp && gulp watch"
+  },
+  "devDependencies": {
+    "gulp-sourcemaps": "^1.6.0"
   }
 }

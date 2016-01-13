@@ -2,10 +2,12 @@
 
 const   env = process.env.NODE_ENV,
 		gulp = require('gulp'),
+		gulpif = require('gulp-if'),
 		cache = require('gulp-cache'),
 		clean = require('gulp-rimraf'),
 		stream = require('event-stream'),
 		browserSync = require('browser-sync'),
+		babel = require('gulp-babel'),
 		browserify = require('browserify'),
 		babelify = require('babelify'),
 		uglify = require('gulp-uglify'),
@@ -81,14 +83,14 @@ gulp.task('scripts', () => {
 			title: 'size of js dependencies'
 		}));
 	let pages = gulp.src('source/js/pages/*.js')
-		.pipe(sourcemaps.init())
+		.pipe(gulpif(env === "development", sourcemaps.init()))
 		.pipe(babel({
 			presets: ['es2015']
 		}))
 		.on("error", notify.onError({
 			message: 'Babel error: <%= error.message %>'
 		}))
-		.pipe(sourcemaps.write())
+		.pipe(gulpif(env === "development", sourcemaps.write()))
 		.pipe(gulp.dest('js'))
 		.pipe(size({
 			title: 'size of modules'
