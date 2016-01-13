@@ -8,7 +8,7 @@ let audio = new Audio(),
 
 class pageMedia {
     constructor() {}
-    
+
     pageM() {
         let page = document.querySelector('#page_body.fl_r'),
             pageConfig = {
@@ -20,11 +20,11 @@ class pageMedia {
 
             (mutations) => {
                 mutations.forEach( (mutation) => {
-                    let node = mutation.target, 
+                    let node = mutation.target,
                         audios = node.querySelectorAll('.audio'),
                         blocks = node.querySelectorAll('.post');
                     audio.showA(audios);
-                    audio.getA(blocks); 
+                    audio.getA(blocks);
                 });
             }
 
@@ -72,7 +72,7 @@ class pageMedia {
                     if (m) {
                         audio.showA(m.querySelectorAll('.audio'));
                         audio.getA(m.querySelectorAll('.wall_audio'));
-                    } 
+                    }
 
                     if (playlist) {
                         let playlistObserver = new window.WebKitMutationObserver(
@@ -96,10 +96,14 @@ class pageMedia {
                             iconL = ticker.querySelector('#like-icon');
 
                         setTimeout( () => {
-                            localStorage.vkObserver_title = ticker.querySelector('#gp_title').innerText;
-                            localStorage.vkObserver_artist = ticker.querySelector('#gp_performer').innerText;
+                            localStorage.vkObserver_title = ticker
+                                                            .querySelector('#gp_title')
+                                                            .innerText;
+                            localStorage.vkObserver_artist = ticker
+                                                            .querySelector('#gp_performer')
+                                                            .innerText;
                         }, 2000);
-                        
+
                         if(!lastContainer){
                             let lastControls = document.createElement('div'),
                                 scrobbleIcon = document.createElement('div'),
@@ -113,17 +117,26 @@ class pageMedia {
                         }
 
                         ticker.onclick = () => {
-                            scrobbler.likeSong(localStorage.vkObserver_artist, localStorage.vkObserver_title, iconL);
+                            scrobbler.likeSong(
+                              localStorage.vkObserver_artist,
+                              localStorage.vkObserver_title,
+                              iconL
+                            );
                         };
-                        
-                        let tickerObs = new MutationObserver( (mutations, observer) => {
-                            mutations.forEach( (mutation) => {        
+
+                        let tickerObs = new MutationObserver(
+                          (mutations, observer) => {
+                            mutations.forEach( (mutation) => {
                                 let playing = mutation.target,
-                                    artist = playing.parentNode.querySelector('#gp_performer'),  
-                                    title = playing.parentNode.querySelector('#gp_title'),
+                                    artist = playing
+                                            .parentNode
+                                            .querySelector('#gp_performer'),
+                                    title = playing
+                                            .parentNode
+                                            .querySelector('#gp_title'),
                                     iconStatus = ticker.querySelector('#scrobble-icon'),
                                     iconLike = ticker.querySelector('#like-icon');
-                                
+
                                 if (localStorage.VkObserver_scrobble !== 'disabled'){
                                     iconStatus.style.visibility = 'visible';
                                     iconLike.style.visibility = 'visible';
@@ -140,12 +153,16 @@ class pageMedia {
                                     iconLike.setAttribute('title', 'добавить в любимые');
                                     localStorage.vkObserver_title = title.innerText;
                                     localStorage.vkObserver_artist = artist.innerText;
-                                    checker = window.setTimeout(function(){
-                                        scrobbler.scrobble(localStorage.vkObserver_artist, localStorage.vkObserver_title, iconStatus);
+                                    checker = window.setTimeout(() => {
+                                        scrobbler.scrobble(
+                                          localStorage.vkObserver_artist,
+                                          localStorage.vkObserver_title,
+                                          iconStatus
+                                        );
                                         iconLike.className = '';
                                     }, 21000);
                                 }
-                        
+
                             })
                         });
 

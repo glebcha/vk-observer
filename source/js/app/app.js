@@ -4,9 +4,9 @@ import Video from './video';
 import Watcher from './watcher';
 
 let vk = new vkObserver(),
-	audio = new Audio(),
-	video = new Video(),
-	watcher = new Watcher();
+    audio = new Audio(),
+    video = new Video(),
+    watcher = new Watcher();
 
 vk.syncStorage();
 audio.showA();

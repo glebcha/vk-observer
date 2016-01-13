@@ -2,13 +2,13 @@ import vkObserver from './main';
 
 class Audio extends vkObserver {
 	constructor() {
-		super(); 
+		super();
 	}
 
 	showA(audios) {
 		let audioBlocks = audios || document.querySelectorAll('.audio');
 		audioBlocks = [].slice.call(audioBlocks);
-		
+
 		function noBubbling(event) {
 			event.stopPropagation();
 		}
@@ -19,7 +19,11 @@ class Audio extends vkObserver {
 				url = el.href,
 				downloadBtn = wrap.querySelector('.download-link'),
 				cacheStatus = localStorage.VkObserver_cache,
-				getLink = this.parentNode.parentNode.querySelector('input').value.split('?').splice(0, 1).toString();
+				getLink = this
+							.parentNode
+							.parentNode
+							.querySelector('input')
+							.value.split('?').splice(0, 1).toString();
 			if (cacheStatus == 'enabled') {
 				event.preventDefault();
 				event.stopPropagation();
@@ -50,13 +54,13 @@ class Audio extends vkObserver {
 						el.href = link;
 						el.click();
 						el.removeEventListener('click', getblob, false);
-						winUrl.revokeObjectURL(link);
-						el.href = getLink;
+						//winUrl.revokeObjectURL(link);
+						//el.href = getLink;
 					}
 				};
 				xhr.open('GET', url, true);
 				xhr.send(null);
-			} else {}
+			}
 
 		};
 
@@ -64,10 +68,15 @@ class Audio extends vkObserver {
 			event.preventDefault();
 			let audioContainer = this,
 				linkBtn = audioContainer.querySelector('.play_btn_wrap'),
-				audioLink = linkBtn.parentNode.querySelector('input').value.split('?').splice(0, 1).toString(),
-				audioDurationSeconds = audioContainer.querySelector('.duration').dataset.duration,
+				audioLink = linkBtn
+							.parentNode
+							.querySelector('input')
+							.value.split('?').splice(0, 1).toString(),
+				audioDurationSeconds = audioContainer
+										.querySelector('.duration')
+										.dataset.duration,
 				bitrateStatus = localStorage.VkObserver_bitrate;
-		
+
 			let bitRate = (callback) => {
 				let xmlhttp = new XMLHttpRequest();
 				xmlhttp.overrideMimeType('text/xml');
@@ -115,16 +124,25 @@ class Audio extends vkObserver {
 				);
 			}
 		};
-		
+
 		if (audioBlocks.length > 0) {
 			audioBlocks.forEach( (audioBlock) => {
 				let btn = audioBlock.querySelector('.play_btn_wrap'),
 					btnPlay = btn.querySelector('.play_new'),
 					linkContainer = btn.parentNode.querySelector('input').value,
-					getLink = btn.parentNode.querySelector('input').value.split('?').splice(0, 1).toString();
+					getLink = btn
+								.parentNode
+								.querySelector('input')
+								.value.split('?').splice(0, 1).toString();
 				if (!btn.querySelector('.download-link') && linkContainer.indexOf('mp3') > 0) {
-					let audioTitle = audioBlock.querySelector('.title_wrap.fl_l .title').innerText,
-						audioArtist = audioBlock.querySelector('.title_wrap.fl_l').firstElementChild.firstElementChild.innerText,
+					let audioTitle = audioBlock
+										.querySelector('.title_wrap.fl_l .title')
+										.innerText,
+						audioArtist = audioBlock
+										.querySelector('.title_wrap.fl_l')
+										.firstElementChild
+										.firstElementChild
+										.innerText,
 						audioName = audioArtist + "-" + audioTitle,
 						audioFullName = audioName.replace(/\./g, ''),
 						audioDurationBlock = audioBlock.querySelector('.duration'),
@@ -136,10 +154,14 @@ class Audio extends vkObserver {
 					d.href = getLink;
 					d.setAttribute('download', audioFullName);
 					d.addEventListener('click', noBubbling, false);
-					d.addEventListener('click', getblob, false); 
+					d.addEventListener('click', getblob, false);
 					btn.appendChild(d);
 					audioBlock.addEventListener('mouseover', displayBitrate, false);
-				} else if(!this.findClosest(audioBlock, '.feed_row') && linkContainer.indexOf('mp3') < 0 && audioBlock.className.indexOf('restricted') < 0) {
+				} else if(
+					!this.findClosest(audioBlock, '.feed_row') &&
+					linkContainer.indexOf('mp3') < 0 &&
+					audioBlock.className.indexOf('restricted') < 0
+				) {
 					audioBlock.className += ' restricted'
 				}
 			})
@@ -177,7 +199,7 @@ class Audio extends vkObserver {
 			}
 		})
 	}
-	
+
 
 }
 
