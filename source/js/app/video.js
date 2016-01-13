@@ -11,10 +11,10 @@ class Video {
 
             let el = event.target,
                 url = el.getAttribute('href')
-                name = el.getAttribute('download');
+                name = el.getAttribute('download').replace(/[\s\|]/g, '-');
 
             chrome.runtime.sendMessage(
-                {query: 'getvideo', url: url, name: name}, 
+                {query: 'getvideo', url: url, name: name},
                 (response) => {
                     //console.log(response);
                 }
@@ -38,6 +38,7 @@ class Video {
                 let sideBar = parent.querySelector('.mv_share_actions'),
                     videoTitle = parent.querySelector('.mv_min_title').innerText,
                     el = document.createElement('div');
+                videoTitle = /^\s*$/.test(videoTitle) ? 'VK-Video' : videoTitle;
                 el.className = 'arr_div';
                 if (!sideBar.querySelector('.arr_div')) {
                     sideBar.appendChild(el);
@@ -45,7 +46,11 @@ class Video {
                 let html5 = videoBox.querySelector('video'),
                     embed = videoBox.querySelector('embed');
                 if (html5) {
-                    let sourceString = html5.getAttribute('src').split('mp4').slice(0, 1).toString() + "mp4",
+                    let sourceString = html5
+                                        .getAttribute('src')
+                                        .split('mp4')
+                                        .slice(0, 1)
+                                        .toString() + "mp4",
                         videoDownload = document.createElement('a');
                         videoDownload.className = 'html5-video';
                         videoDownload.href = sourceString;
@@ -97,13 +102,13 @@ class Video {
                                     case '480':
                                         finalVideoQuality = 'среднее качество (' + videoQuality + ')';
                                         break;
-                                    case '720': 
+                                    case '720':
                                         finalVideoQuality = 'высокое качество (' + videoQuality + ')';
                                         break;
                                     default:
                                         finalVideoQuality = 'качество (' + videoQuality + ')';
                                         break;
-                                }   
+                                }
 
                                 return '<li><a href="' + link + '" download="' + videoTitle + '" class="flat_button">' + finalVideoQuality + '</a></li>';
                             }),
