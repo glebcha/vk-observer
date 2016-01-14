@@ -36,23 +36,23 @@ let getOption = () => {
             storage.clear();
             saveOption(defaultSettings);
         }
-        if (state.cache == 'enabled') {
+        if (state.cache === 'enabled') {
             toggleCache.checked = true;
         }
-        if (state.cache == 'disabled') {
+        if (state.cache === 'disabled') {
             toggleCache.checked = false;
         }
-        if (state.bitrate == 'enabled') {
+        if (state.bitrate === 'enabled') {
             toggleBitrate.checked = true;
         }
-        if (state.bitrate == 'disabled') {
+        if (state.bitrate === 'disabled') {
             toggleBitrate.checked = false;
         }
 
-        if (state.scrobble == 'enabled') {
+        if (state.scrobble === 'enabled') {
             toggleScrobble.checked = true;
         }
-        if (state.scrobble == 'disabled') {
+        if (state.scrobble === 'disabled') {
             toggleScrobble.checked = false;
         }
 
