@@ -34,7 +34,7 @@ class Scrobbler {
                 }
 
                 if (
-                  scrobbleStatus == 'enabled' &&
+                  scrobbleStatus === 'enabled' &&
                   songArtist !== null &&
                   songArtist !== undefined
                 ) {
@@ -96,7 +96,7 @@ class Scrobbler {
                 	};
 
                 if (
-                  scrobbleStatus == 'enabled' &&
+                  scrobbleStatus === 'enabled' &&
                   songArtist !== null &&
                   songArtist !== undefined &&
                   likeIcon.className !== 'changed'

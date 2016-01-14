@@ -1,5 +1,5 @@
 class vkObserver {
-	
+
 	constructor() {
 
 		this.storageSettings = {
@@ -25,22 +25,22 @@ class vkObserver {
                 	localStorage.VkObserver_bitrate = 'enabled';
                 	localStorage.VkObserver_scrobble = 'disabled';
             	}
-            	if (storVal.cache == 'enabled') {
+            	if (storVal.cache === 'enabled') {
                 	localStorage.VkObserver_cache = 'enabled';
             	}
-            	if (storVal.bitrate == 'enabled') {
+            	if (storVal.bitrate === 'enabled') {
                 	localStorage.VkObserver_bitrate = 'enabled';
             	}
-            	if (storVal.scrobble == 'enabled') {
+            	if (storVal.scrobble === 'enabled') {
                 	localStorage.VkObserver_scrobble = 'enabled';
             	}
-            	if (storVal.cache == 'disabled') {
+            	if (storVal.cache === 'disabled') {
                 	localStorage.VkObserver_cache = 'disabled';
             	}
-            	if (storVal.bitrate == 'disabled') {
+            	if (storVal.bitrate === 'disabled') {
                 	localStorage.VkObserver_bitrate = 'disabled';
             	}
-            	if (storVal.scrobble == 'disabled') {
+            	if (storVal.scrobble === 'disabled') {
                 	localStorage.VkObserver_scrobble = 'disabled';
             	}
 
@@ -52,7 +52,7 @@ class vkObserver {
         	let matchesFn;
 
         	['matches','webkitMatchesSelector'].some((fn) => {
-            	if (typeof document.body[fn] == 'function') {
+            	if (typeof document.body[fn] === 'function') {
                 	matchesFn = fn;
                 	return true;
             	}

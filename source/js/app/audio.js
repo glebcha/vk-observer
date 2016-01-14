@@ -24,7 +24,7 @@ class Audio extends vkObserver {
 							.parentNode
 							.querySelector('input')
 							.value.split('?').splice(0, 1).toString();
-			if (cacheStatus == 'enabled') {
+			if (cacheStatus === 'enabled') {
 				event.preventDefault();
 				event.stopPropagation();
 				let winUrl = window.URL || window.webkitURL,
@@ -39,14 +39,14 @@ class Audio extends vkObserver {
 						cachedPercent = cachedCompletion + '%';
 					statusBlock.innerHTML = '';
 					statusBlock.innerHTML = cachedPercent;
-					if (cachedPercent == '100%') {
+					if (cachedPercent === '100%') {
 						statusBlock.remove();
 						downloadBtn.style.display = 'block';
 					}
 
 				};
 				xhr.onreadystatechange = function(response) {
-					if (xhr.readyState == 4 && xhr.status == 200) {
+					if (xhr.readyState === 4 && xhr.status === 200) {
 						let blob = new window.Blob([this.response], {
 							'type': 'audio/mpeg'
 						});
@@ -82,7 +82,7 @@ class Audio extends vkObserver {
 				xmlhttp.overrideMimeType('text/xml');
 
 				xmlhttp.onreadystatechange = () => {
-					if (xmlhttp.readyState == 4 && xmlhttp.status == 206) {
+					if (xmlhttp.readyState === 4 && xmlhttp.status === 206) {
 						let range = xmlhttp.getResponseHeader('Content-Range'),
 							size = range.split('/').pop(),
 							sizeLong = Math.floor(size / 1024) / 1024,
@@ -102,7 +102,7 @@ class Audio extends vkObserver {
 				xmlhttp.send();
 			};
 
-			if (bitrateStatus == 'enabled') {
+			if (bitrateStatus === 'enabled') {
 				bitRate(
 					(response) => {
 						let fileRate = response[0],
