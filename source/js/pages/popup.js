@@ -1,5 +1,7 @@
+const storage = chrome.storage.sync;
+
 let saveOption = (value) => {
-    chrome.storage.sync.set({'settings': value}, () => {
+    storage.set({'settings': value}, () => {
         chrome.tabs.query({'url': '*://vk.com/*'}, (tabs) => {
             tabs.forEach( (tab) => {
                 chrome.tabs.executeScript(tab.id, {file: "js/vk-observer.js"});
@@ -9,7 +11,7 @@ let saveOption = (value) => {
 };
 
 let saveLastKeys = (defaultKeys) => {
-    chrome.storage.sync.set({'lastkeys': defaultKeys}, () => {
+    storage.set({'lastkeys': defaultKeys}, () => {
         chrome.tabs.query({'url': '*://vk.com/*'}, (tabs) => {
             tabs.forEach( (tab) => {
                 chrome.tabs.executeScript(tabs[k].id, {file: "js/vk-observer.js"});
@@ -19,7 +21,6 @@ let saveLastKeys = (defaultKeys) => {
 };
 
 let getOption = () => {
-    const storage = chrome.storage.sync;
     let toggleCache = document.querySelector('.toggle-cache'),
         toggleBitrate = document.querySelector('.toggle-bitrate'),
         toggleScrobble = document.querySelector('.toggle-scrobble');
@@ -30,8 +31,9 @@ let getOption = () => {
                 "cache": 'enabled',
                 "scrobble": 'disabled'
             };
+
         if (state === undefined || state.scrobble === undefined) {
-            chrome.storage.sync.clear();
+            storage.clear();
             saveOption(defaultSettings);
         }
         if (state.cache == 'enabled') {
@@ -77,120 +79,79 @@ window.onload = () => {
         toggleScrobble = document.querySelector('.toggle-scrobble');
 
     let changeCache = (event) => {
-        const storage = chrome.storage.sync;
         let bitrateStatus = '',
             scrobbleStatus = '';
-        if (toggleBitrate.checked == true) {
-            bitrateStatus = 'enabled';
-        } else {
-            bitrateStatus = 'disabled';
-        }
 
-        if (toggleScrobble.checked == true) {
-            scrobbleStatus = 'enabled';
-        } else {
-            scrobbleStatus = 'disabled';
-        }
+        bitrateStatus = toggleBitrate.checked ? 'enabled' : 'disabled';
+        scrobbleStatus = toggleScrobble.checked ? 'enabled' : 'disabled';
 
         storage.get('settings', (data) => {
-            let state = data.settings;
-            if (state.cache == 'enabled') {
+            let state = data.settings,
+                options = {
+                    bitrate: bitrateStatus,
+                    cache: 'enabled',
+                    scrobble: scrobbleStatus
+                };
+            toggleCache.checked = true;
+            if (state.cache === 'enabled') {
                 toggleCache.checked = false;
-                saveOption({
-                    "bitrate": bitrateStatus,
-                    "cache": 'disabled',
-                    "scrobble": scrobbleStatus
-                });
+                options.cache = 'disabled';
             }
-            if (state.cache == 'disabled') {
-                toggleCache.checked = true;
-                saveOption({
-                    "bitrate": bitrateStatus,
-                    "cache": 'enabled',
-                    "scrobble": scrobbleStatus
-                });
-            }
+            saveOption(options);
         });
     };
 
     let changeBitrate = (event) => {
-        const storage = chrome.storage.sync;
         let cacheStatus = '',
             scrobbleStatus = '';
-        if (toggleCache.checked == true) {
-            cacheStatus = 'enabled';
-        } else {
-            cacheStatus = 'disabled';
-        }
 
-        if (toggleScrobble.checked == true) {
-            scrobbleStatus = 'enabled';
-        } else {
-            scrobbleStatus = 'disabled';
-        }
+        cacheStatus = toggleCache.checked ? 'enabled' : 'disabled';
+        scrobbleStatus = toggleScrobble.checked ? 'enabled' : 'disabled';
 
         storage.get('settings', function(data) {
-            var state = data.settings;
-            if (state.bitrate == 'enabled') {
-                toggleBitrate.checked = false;
-                saveOption({
-                    "bitrate": 'disabled',
-                    "cache": cacheStatus,
-                    "scrobble": scrobbleStatus
-                });
-            }
-            if (state.bitrate == 'disabled') {
-                toggleBitrate.checked = true;
-                saveOption({
+            var state = data.settings,
+                options = {
                     "bitrate": 'enabled',
                     "cache": cacheStatus,
                     "scrobble": scrobbleStatus
-                });
+                };
+            toggleBitrate.checked = true;
+            if (state.bitrate === 'enabled') {
+                toggleBitrate.checked = false;
+                options.bitrate = 'disabled';
             }
+            saveOption(options);
         });
     };
 
     let changeScrobble = (event) => {
-        const storage = chrome.storage.sync;
         let cacheStatus = '',
             bitrateStatus = '';
-        if (toggleCache.checked == true) {
-            cacheStatus = 'enabled';
-        } else {
-            cacheStatus = 'disabled';
-        }
 
-        if (toggleBitrate.checked == true) {
-            bitrateStatus = 'enabled';
-        } else {
-            bitrateStatus = 'disabled';
-        }
+        cacheStatus = toggleCache.checked ? 'enabled' : 'disabled';
+        bitrateStatus = toggleBitrate.checked ? 'enabled' : 'disabled';
 
         storage.get('settings', (data) => {
-            var state = data.settings;
-            if (state.scrobble == 'enabled') {
-                toggleScrobble.checked = false;
-                storage.remove('lastsession', () => {
-                  saveOption({
-                      "bitrate": bitrateStatus,
-                      "cache": cacheStatus,
-                      "scrobble": 'disabled'
-                  });
-                })
-            }
-            if (state.scrobble == 'disabled') {
-                toggleScrobble.checked = true;
-                saveOption({
+            var state = data.settings,
+                options = {
                     "bitrate": bitrateStatus,
                     "cache": cacheStatus,
                     "scrobble": 'enabled'
-                });
+                };
+            toggleScrobble.checked = true;
+            if (state.scrobble === 'enabled') {
+                toggleScrobble.checked = false;
+                options.scrobble = 'disabled';
+                storage.remove('lastsession', () => {
+                  saveOption(options);
+                })
             }
+            saveOption(options);
         });
 
         storage.get('lastsession', (data) => {
-            const sessionKey = data.lastsession;
-            const apiKey = '488c3ca0fd22d7b5e8a0cd9650322d33';
+            const sessionKey = data.lastsession,
+                    apiKey = '488c3ca0fd22d7b5e8a0cd9650322d33';
             let apiUrl = 'http://www.lastfm.ru/api/auth?api_key=' + apiKey;
 
             if (sessionKey === undefined) {
