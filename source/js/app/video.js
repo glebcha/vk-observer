@@ -11,7 +11,8 @@ class Video {
 
             let el = event.target,
                 url = el.getAttribute('href')
-                name = el.getAttribute('download').replace(/[\s\|]/g, '-');
+                name = el.getAttribute('download')
+                        .replace(/[\s\|\/:?~<>*]/g, '-');
 
             chrome.runtime.sendMessage(
                 {query: 'getvideo', url: url, name: name},
@@ -91,7 +92,10 @@ class Video {
                             })(),
                             htmlUrls = noDupsUrls.map( (link) => {
                                 let finalVideoQuality = '',
-                                    videoQuality = link.match(reg)[0];
+                                    videoQuality = link
+                                                    .split('/')
+                                                    .pop()
+                                                    .match(reg)[0];
                                 switch (videoQuality) {
                                     case '240':
                                         finalVideoQuality = 'плохое качество (' + videoQuality + ')';

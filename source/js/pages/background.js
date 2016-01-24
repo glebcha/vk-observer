@@ -3,7 +3,6 @@ let tabId;
 chrome.runtime.onMessage.addListener(
   (request, sender, sendResponse) => {
     if (request.query === 'getvideo') {
-    	//console.log('request', request);
     	chrome.downloads.download({
             url: request.url,
             filename: request.name + '.mp4'
