@@ -19,30 +19,29 @@ class vkObserver {
 		const storage = chrome.storage.sync;
 		storage.get('settings', (data) => {
 			const storVal = data.settings;
+
 			if (storVal === undefined) {
 				this.clearStorage();
 				localStorage.VkObserver_cache = 'enabled';
 				localStorage.VkObserver_bitrate = 'enabled';
 				localStorage.VkObserver_scrobble = 'disabled';
 			}
-			if (storVal.cache === 'enabled') {
-				localStorage.VkObserver_cache = 'enabled';
-			}
-			if (storVal.bitrate === 'enabled') {
-				localStorage.VkObserver_bitrate = 'enabled';
-			}
-			if (storVal.scrobble === 'enabled') {
-				localStorage.VkObserver_scrobble = 'enabled';
-			}
-			if (storVal.cache === 'disabled') {
-				localStorage.VkObserver_cache = 'disabled';
-			}
-			if (storVal.bitrate === 'disabled') {
-				localStorage.VkObserver_bitrate = 'disabled';
-			}
-			if (storVal.scrobble === 'disabled') {
-				localStorage.VkObserver_scrobble = 'disabled';
-			}
+
+			localStorage.VkObserver_cache = storVal.cache === 'disabled'
+											?
+											'disabled'
+											:
+											'enabled';
+			localStorage.VkObserver_bitrate = storVal.bitrate === 'disabled'
+											?
+											'disabled'
+											:
+											'enabled';
+			localStorage.VkObserver_scrobble = storVal.scrobble === 'disabled'
+											?
+											'disabled'
+											:
+											'enabled';
 
 		});
 	}
