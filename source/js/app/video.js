@@ -31,16 +31,20 @@ class Video {
         });
 
         if (parent) {
-            let videoBox = box || videoWrap.querySelector('.video_box'),
+            let videoBox = box || videoWrap.querySelector('#mv_box'),
                 quality = [240, 360, 480, 720],
                 reg = new RegExp(quality.join("|"), "i");
 
             if (videoBox) {
-                let sideBar = parent.querySelector('.mv_share_actions'),
+                let sideBar = parent.querySelector('.mv_actions_panel>.clear_fix'),
                     videoTitle = parent.querySelector('.mv_min_title').innerText,
-                    el = document.createElement('div');
+                    el = document.createElement('div'),
+                    downloadBtn = document.createElement('div');
                 videoTitle = /^\s*$/.test(videoTitle) ? 'VK-Video' : videoTitle;
-                el.className = 'arr_div';
+                el.className = 'arr_div idd_wrap mv_more fl_l';
+                downloadBtn.className = 'idd_selected_value idd_arrow';
+                downloadBtn.innerHTML = 'Загрузить';
+                el.appendChild(downloadBtn);
                 if (!sideBar.querySelector('.arr_div')) {
                     sideBar.appendChild(el);
                 }
@@ -114,11 +118,14 @@ class Video {
                                         break;
                                 }
 
-                                return '<li><a href="' + link + '" download="' + videoTitle + '" class="flat_button">' + finalVideoQuality + '</a></li>';
+                                return '<li><a href="' + link + '" download="' + videoTitle + '">' + finalVideoQuality + '</a></li>';
                             }),
+                            popup = document.createElement('div'),
                             uArr = document.createElement('ul');
-                            uArr.innerHTML = htmlUrls.join('');
-                        el.appendChild(uArr);
+                        popup.className = 'idd_popup';
+                        uArr.innerHTML = htmlUrls.join('');
+                        popup.appendChild(uArr);
+                        el.appendChild(popup);
                         [].slice.call(el.querySelectorAll('ul>li>a')).forEach( (btn) => {
                             btn.addEventListener('click', getvideo, false);
                         })

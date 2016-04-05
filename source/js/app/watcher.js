@@ -21,7 +21,7 @@ class pageMedia {
             (mutations) => {
                 mutations.forEach( (mutation) => {
                     let node = mutation.target,
-                        audios = node.querySelectorAll('.audio'),
+                        audios = node.querySelectorAll('.audio_row'),
                         blocks = node.querySelectorAll('.post');
                     audio.showA(audios);
                     audio.getA(blocks);
@@ -46,10 +46,10 @@ class pageMedia {
             (mutations) => {
                 mutations.forEach( (mutation) => {
                     let node = mutation.target,
-                        playlist = node.querySelector('#pad_playlist_panel'),
-                        v = node.querySelector('#mv_layer_wrap'),
-                        m = node.querySelector('#wk_layer_wrap '),
-                        ticker = node.querySelector('#audio_global');
+                        playlist = node.querySelector('.audio_playlist_wrap'),
+                        v = node.querySelector('#mv_layer_wrap'),//video modal
+                        m = node.querySelector('#wk_layer_wrap '),//wall post modal
+                        ticker = node.querySelector('.top_audio_player');
 
                     if (v) {
 
@@ -58,7 +58,7 @@ class pageMedia {
                             (mutations) => {
                                 mutations.forEach(function(mutation) {
                                     let node = mutation.target,
-                                        videoBox = node.querySelector('.video_box');
+                                        videoBox = node.querySelector('#mv_box');
                                     video.showV(v, videoBox);
                                 });
                             });
@@ -70,8 +70,8 @@ class pageMedia {
                     }
 
                     if (m) {
-                        audio.showA(m.querySelectorAll('.audio'));
-                        audio.getA(m.querySelectorAll('.wall_audio'));
+                        audio.showA(m.querySelectorAll('.audio_row'));
+                        audio.getA(m.querySelectorAll('.wall_audio_rows'));
                     }
 
                     if (playlist) {
@@ -80,7 +80,7 @@ class pageMedia {
                             (mutations) => {
                                 mutations.forEach(function(mutation) {
                                     var node = mutation.target,
-                                        audios = node.querySelectorAll('.audio');
+                                        audios = node.querySelectorAll('.audio_row');
                                     audio.showA(audios);
                                 });
                             });
@@ -89,19 +89,25 @@ class pageMedia {
                             subtree: true
                         };
                         playlistObserver.observe(playlist, playlistConfig);
+                        audio.showA(playlist.querySelectorAll('.audio_row'));
                     }
 
                     if (ticker) {
-                        let lastContainer = ticker.querySelector('.last-controls'),
-                            iconL = ticker.querySelector('#like-icon');
+                        let lastContainer = ticker
+                                            .parentNode
+                                            .querySelector('.last-controls'),
+                            iconL = ticker
+                                    .parentNode
+                                    .querySelector('#like-icon'),
+                            fullTitle = ticker
+                                        .querySelector('.top_audio_player_title')
+                                        .innerText
+                                        .replace(/\s?([–-])\s?/g, '-')
+                                        .split('-');
 
                         setTimeout( () => {
-                            localStorage.vkObserver_title = ticker
-                                                            .querySelector('#gp_title')
-                                                            .innerText;
-                            localStorage.vkObserver_artist = ticker
-                                                            .querySelector('#gp_performer')
-                                                            .innerText;
+                            localStorage.vkObserver_artist = fullTitle[0];
+                            localStorage.vkObserver_title = fullTitle[1];
                         }, 2000);
 
                         if(!lastContainer){
@@ -116,7 +122,11 @@ class pageMedia {
                             ticker.appendChild(lastControls);
                         }
 
-                        ticker.onclick = () => {
+                        ticker
+                        .parentNode
+                        .querySelector('#like-icon')
+                        .onclick = (e) => {
+                            e.stopPropagation();
                             scrobbler.likeSong(
                               localStorage.vkObserver_artist,
                               localStorage.vkObserver_title,
@@ -127,15 +137,23 @@ class pageMedia {
                         let tickerObs = new MutationObserver(
                           (mutations, observer) => {
                             mutations.forEach( (mutation) => {
-                                let playing = mutation.target,
-                                    artist = playing
-                                            .parentNode
-                                            .querySelector('#gp_performer'),
-                                    title = playing
-                                            .parentNode
-                                            .querySelector('#gp_title'),
-                                    iconStatus = ticker.querySelector('#scrobble-icon'),
-                                    iconLike = ticker.querySelector('#like-icon');
+                                const playing = mutation.target,
+                                        fullTitle = playing
+                                                    .parentNode
+                                                    .parentNode
+                                                    .querySelector('.top_audio_player_title');
+                                const  formattedTitle = fullTitle
+                                                        .innerText
+                                                        .replace(/\s?([–-])\s?/g, '-')
+                                                        .split('-');
+                                const artist = formattedTitle[0],
+                                        title = formattedTitle[1],
+                                        iconStatus = ticker
+                                                    .parentNode
+                                                    .querySelector('#scrobble-icon'),
+                                        iconLike = ticker
+                                                    .parentNode
+                                                    .querySelector('#like-icon');
 
                                 if (localStorage.VkObserver_scrobble !== 'disabled'){
                                     iconStatus.style.visibility = 'visible';
@@ -145,14 +163,14 @@ class pageMedia {
                                     iconLike.style.visibility = 'hidden';
                                 }
 
-                                if (title.innerText !== localStorage.vkObserver_title) {
+                                if (fullTitle && title !== localStorage.vkObserver_title) {
                                     window.clearTimeout(checker);
                                     iconStatus.className = '';
                                     iconStatus.setAttribute('title', 'скробблится');
                                     iconLike.className = 'changed';
                                     iconLike.setAttribute('title', 'добавить в любимые');
-                                    localStorage.vkObserver_title = title.innerText;
-                                    localStorage.vkObserver_artist = artist.innerText;
+                                    localStorage.vkObserver_title = title;
+                                    localStorage.vkObserver_artist = artist;
                                     checker = window.setTimeout(() => {
                                         scrobbler.scrobble(
                                           localStorage.vkObserver_artist,
