@@ -42,7 +42,7 @@
 
     .download-link {
         top: 11px;
-        right: 63px;
+        right: 90px;
     }
 
     .download-all-link {
@@ -56,13 +56,24 @@
 
 }
 
-.audio_playlist_wrap {
+.eltt.top_audio_layer {
+    .canadd {
+        .download-link {
+            right: 15%;
+        }
+    }
 
     .download-link {
         top: 11px;
-        right: 63px;
+        right: 11%;
     }
 
+}
+
+._audio_padding_cont {
+    .download-link {
+        right: 20.5%;
+    }
 }
 
 .download-all-link {
@@ -173,26 +184,15 @@
     margin: 6px 75px 6px 0px !important;
 }
 
-.restricted {
-    position: relative;
-    padding-bottom: 15px;
-
-    &:before {
-        position: absolute;
-        top: 20%;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background: #6383a8;
-        content: '';
-    }
-
-    &:after {
-        display: block;
-        width: 100%;
-        height: auto;
-        color: #6383a8;
-        content: 'Аудиозапись удалена правообладателем';
+.claimed {
+    .audio_title_wrap {
+        &:after {
+            display: block;
+            width: 100%;
+            height: auto;
+            color: #6383a8;
+            content: 'Аудиозапись удалена правообладателем';
+        }
     }
 }
 
