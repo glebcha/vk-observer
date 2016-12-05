@@ -9,13 +9,13 @@ class Video {
             event.preventDefault();
             event.stopPropagation();
 
-            let el = event.target,
-                url = el.getAttribute('href')
-                name = el.getAttribute('download')
+            const el = event.target;
+            const url = el.getAttribute('href');
+            const name = el.getAttribute('download')
                         .replace(/[\s\|\/:?~<>*]/g, '-');
 
             chrome.runtime.sendMessage(
-                {query: 'getvideo', url: url, name: name},
+                {query: 'getvideo', url, name},
                 (response) => {
                     //console.log(response);
                 }
@@ -31,107 +31,87 @@ class Video {
         });
 
         if (parent) {
-            let videoBox = box || videoWrap.querySelector('#mv_box'),
-                quality = [240, 360, 480, 720],
-                reg = new RegExp(quality.join("|"), "i");
+            const videoBox = box || videoWrap.querySelector('#mv_box');
 
             if (videoBox) {
-                let sideBar = parent.querySelector('.mv_actions_panel>.clear_fix'),
-                    videoTitle = parent.querySelector('.mv_min_title').innerText,
-                    el = document.createElement('div'),
-                    downloadBtn = document.createElement('div');
+                const qualityItems = parent.querySelectorAll('.videoplayer_quality_select ._item');
+                const sideBar = parent.querySelector('.mv_actions_block>.clear_fix');
+
+                let videoTitle = parent.querySelector('.mv_min_title').innerText;
                 videoTitle = /^\s*$/.test(videoTitle) ? 'VK-Video' : videoTitle;
-                el.className = 'arr_div idd_wrap mv_more fl_l';
-                downloadBtn.className = 'idd_selected_value idd_arrow';
-                downloadBtn.innerHTML = 'Загрузить';
-                el.appendChild(downloadBtn);
-                if (!sideBar.querySelector('.arr_div')) {
-                    sideBar.appendChild(el);
-                }
-                let html5 = videoBox.querySelector('video'),
-                    embed = videoBox.querySelector('embed');
+
+
+                const html5 = videoBox.querySelector('video');
+
                 if (html5) {
-                    let sourceString = html5
+                    const sourceString = html5
                                         .getAttribute('src')
                                         .split('mp4')
                                         .slice(0, 1)
-                                        .toString() + "mp4",
-                        videoDownload = document.createElement('a');
-                        videoDownload.className = 'html5-video';
-                        videoDownload.href = sourceString;
-                        videoDownload.setAttribute('download', videoTitle);
-                        videoDownload.innerHTML = '<span class="download-icon"></span>Загрузить видео';
-                    el.appendChild(videoDownload);
-                } else {
-                    if (!embed) {
-                        return;
-                    } else {
-                        let arr = embed.getAttribute('flashvars').split('url'),
-                            newArr = arr.filter(function(arg) {
-                                return arg.match(reg);
-                            }),
-                            filtered = newArr.join().split(/=|extra|%3F/),
-                            urlArr = filtered.filter(function(val) {
-                                return val.match(/http|https/);
-                            }),
-                            filteredUrlArr = urlArr.map(function(item) {
-                                return decodeURIComponent(item);
-                            }),
-                            cleanUrlArr = filteredUrlArr.filter(function(url) {
-                                return url.match(/mp4/);
-                            }),
-                            noDupsUrls = (() => {
-                                var newArr = [];
-                                for (var i = 0; i < quality.length; i++) {
-                                    var q = quality[i];
-                                    for (var k = 0; k < cleanUrlArr.length; k++) {
-                                        var a = cleanUrlArr[k];
-                                        if (a.indexOf(q) > 0) {
-                                            newArr.push(a);
-                                            break;
-                                        }
-                                    }
-                                }
-                                return newArr;
-                            })(),
-                            htmlUrls = noDupsUrls.map( (link) => {
-                                let finalVideoQuality = '',
-                                    videoQuality = link
-                                                    .split('/')
-                                                    .pop()
-                                                    .match(reg)[0];
-                                switch (videoQuality) {
-                                    case '240':
-                                        finalVideoQuality = 'плохое качество (' + videoQuality + ')';
-                                        break;
-                                    case '360':
-                                        finalVideoQuality = 'низкое качество (' + videoQuality + ')';
-                                        break;
-                                    case '480':
-                                        finalVideoQuality = 'среднее качество (' + videoQuality + ')';
-                                        break;
-                                    case '720':
-                                        finalVideoQuality = 'высокое качество (' + videoQuality + ')';
-                                        break;
-                                    default:
-                                        finalVideoQuality = 'качество (' + videoQuality + ')';
-                                        break;
-                                }
+                                        .toString()
+                                        .replace(/\b\.?\d{3}\b/, '');
 
-                                return '<li><a href="' + link + '" download="' + videoTitle + '">' + finalVideoQuality + '</a></li>';
-                            }),
-                            popup = document.createElement('div'),
-                            uArr = document.createElement('ul');
+                    if (sideBar && !sideBar.querySelector('.arr_div')) {
+                        const qualityRange = [].slice.call(qualityItems)
+                                            .map(item => {
+
+                                                if(item.style.display !== 'none') {
+                                                    const videoQuality = parseInt(item.innerHTML);
+                                                    let finalVideoQuality;
+
+                                                    switch (videoQuality) {
+                                                        case 240:
+                                                            finalVideoQuality = `плохое качество (${ videoQuality })`;
+                                                            break;
+                                                        case 360:
+                                                            finalVideoQuality = `низкое качество (${ videoQuality })`;
+                                                            break;
+                                                        case 480:
+                                                            finalVideoQuality = `среднее качество (${ videoQuality })`;
+                                                            break;
+                                                        case 720:
+                                                            finalVideoQuality = `высокое качество (${ videoQuality })`;
+                                                            break;
+                                                        default:
+                                                            finalVideoQuality = `качество (${ videoQuality })`;
+                                                            break;
+                                                    }
+
+                                                    return `<li><a href="${
+                                                        sourceString
+                                                    }${
+                                                        videoQuality
+                                                    }.mp4" download="${
+                                                        videoTitle
+                                                    }">${
+                                                        finalVideoQuality
+                                                    }</a></li>`;
+                                                }
+
+                                            });
+
+                        const el = document.createElement('div');
+                        const downloadBtn = document.createElement('div');
+                        const popup = document.createElement('div');
+                        const uArr = document.createElement('ul');
+
+                        el.className = 'arr_div idd_wrap mv_more fl_l';
+                        downloadBtn.innerHTML = 'Загрузить';
+                        downloadBtn.className = 'idd_selected_value idd_arrow';
                         popup.className = 'idd_popup';
-                        uArr.innerHTML = htmlUrls.join('');
+                        uArr.innerHTML = qualityRange.join('');
                         popup.appendChild(uArr);
+                        el.appendChild(downloadBtn);
                         el.appendChild(popup);
-                        [].slice.call(el.querySelectorAll('ul>li>a')).forEach( (btn) => {
+                        sideBar.appendChild(el);
+                        [].slice.call(el.querySelectorAll('ul>li>a'))
+                        .forEach(btn => {
                             btn.addEventListener('click', getvideo, false);
                         })
-
                     }
+
                 }
+
             }
         }
     }
