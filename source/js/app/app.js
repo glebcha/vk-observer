@@ -10,7 +10,7 @@ let vk = new vkObserver(),
 
 vk.syncStorage();
 audio.showA();
-audio.getA();
+// audio.getA();
 video.showV();
 watcher.pageM();
 watcher.bodyM();
