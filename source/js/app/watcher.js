@@ -2,27 +2,27 @@ import Audio from './audio';
 import Video from './video';
 import Scrobbler from './scrobbler';
 
-let audio = new Audio(),
-    video = new Video(),
-    scrobbler = new Scrobbler();
+const audio = new Audio();
+const video = new Video();
+const scrobbler = new Scrobbler();
 
 class pageMedia {
-    constructor() {}
 
     pageM() {
-        let page = document.querySelector('#page_body.fl_r'),
-            pageConfig = {
-                childList: true,
-                subtree: true
-            };
+        const page = document.querySelector('#page_body.fl_r');
+        const pageConfig = {
+            childList: true,
+            subtree: true
+        };
 
-        let pageObserver = new window.WebKitMutationObserver(
+        const pageObserver = new window.WebKitMutationObserver(
 
             (mutations) => {
                 mutations.forEach( (mutation) => {
-                    let node = mutation.target,
-                        audios = node.querySelectorAll('.audio_row'),
-                        blocks = node.querySelectorAll('.post');
+                    const node = mutation.target;
+                    const audios = node.querySelectorAll('.audio_row');
+                    const blocks = node.querySelectorAll('.post');
+
                     audio.showA(audios);
                     audio.getA(blocks);
                 });
@@ -34,26 +34,26 @@ class pageMedia {
     }
 
     bodyM() {
-        let checker,
-            body = document.body,
-            bodyConfig = {
-                childList: true,
-                subtree: true
-            };
+        const body = document.body;
+        const bodyConfig = {
+            childList: true,
+            subtree: true
+        };
+        let checker;
 
-        let bodyObserver = new window.WebKitMutationObserver(
+        const bodyObserver = new window.WebKitMutationObserver(
 
             (mutations) => {
                 mutations.forEach( (mutation) => {
-                    let node = mutation.target,
-                        playlist = node.querySelector('.audio_playlist_wrap'),
-                        v = node.querySelector('#mv_layer_wrap'),//video modal
-                        m = node.querySelector('#wk_layer_wrap '),//wall post modal
-                        ticker = node.querySelector('.eltt top_audio_layer');
+                    const node = mutation.target;
+                    const playlist = node.querySelector('.audio_playlist_wrap');
+                    const v = node.querySelector('#mv_layer_wrap');//video modal
+                    const m = node.querySelector('#wk_layer_wrap ');//wall post modal
+                    const ticker = node.querySelector('.eltt top_audio_layer');
 
                     if (v) {
 
-                        let vObserver = new window.WebKitMutationObserver(
+                        const vObserver = new window.WebKitMutationObserver(
 
                             (mutations) => {
                                 mutations.forEach(function(mutation) {
@@ -62,7 +62,7 @@ class pageMedia {
                                     video.showV(v, videoBox);
                                 });
                             });
-                        let vConfig = {
+                        const vConfig = {
                             childList: true,
                             subtree: true
                         };
@@ -75,7 +75,7 @@ class pageMedia {
                     }
 
                     if (playlist) {
-                        let playlistObserver = new window.WebKitMutationObserver(
+                        const playlistObserver = new window.WebKitMutationObserver(
 
                             (mutations) => {
                                 mutations.forEach(function(mutation) {
@@ -84,7 +84,7 @@ class pageMedia {
                                     audio.showA(audios);
                                 });
                             });
-                        let playlistConfig = {
+                        const playlistConfig = {
                             childList: true,
                             subtree: true
                         };
@@ -134,7 +134,7 @@ class pageMedia {
                         //     );
                         // };
 
-                        let tickerObs = new MutationObserver(
+                        const tickerObs = new MutationObserver(
                           (mutations, observer) => {
                             mutations.forEach( (mutation) => {
                                 const playing = mutation.target;

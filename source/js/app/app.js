@@ -3,10 +3,10 @@ import Audio from './audio';
 import Video from './video';
 import Watcher from './watcher';
 
-let vk = new vkObserver(),
-    audio = new Audio(),
-    video = new Video(),
-    watcher = new Watcher();
+const vk = new vkObserver();
+const audio = new Audio();
+const video = new Video();
+const watcher = new Watcher();
 
 vk.syncStorage();
 audio.showA();

@@ -14,20 +14,21 @@ class Audio extends vkObserver {
 		const downloaded = event.target.getAttribute('data-enabled');
 
 		if (cacheStatus === 'enabled' && !downloaded) {
+			const winUrl = window.URL || window.webkitURL;
+			const xhr = new XMLHttpRequest();
+			const statusBlock = document.createElement('span');
+
 			event.target.setAttribute('data-enabled', true);
 			event.preventDefault();
 			event.stopPropagation();
 
-			const winUrl = window.URL || window.webkitURL,
-					xhr = new XMLHttpRequest(),
-					statusBlock = document.createElement('span');
 			xhr.responseType = 'blob';
 			el.style.visibility = 'hidden';
 			statusBlock.className = 'cached-status';
 			wrap.appendChild(statusBlock);
 			xhr.onprogress = (completion) => {
-				const cachedCompletion = Math.floor(completion.loaded / completion.total * 100),
-						cachedPercent = cachedCompletion + '%';
+				const cachedCompletion = Math.floor(completion.loaded / completion.total * 100);
+				const cachedPercent = cachedCompletion + '%';
 
 				statusBlock.innerHTML = '';
 				statusBlock.innerHTML = cachedPercent;
@@ -44,6 +45,7 @@ class Audio extends vkObserver {
 						'type': 'audio/mpeg'
 					});
 					const link = winUrl.createObjectURL(blob);
+
 					el.href = link;
 					el.click();
 					el.removeEventListener('click', this.getblob, false);
@@ -216,9 +218,11 @@ class Audio extends vkObserver {
 					btn.className = 'download-all-link';
 					btn.innerHTML = 'Загрузить все<span class="download-tooltip">Нажмите, чтобы загрузить все аудиозаписи</span>';
 					btn.addEventListener('click', getAllAudios, false);
+
 					if (!post.querySelector('.download-all-link')) {
 						wallText.appendChild(btn);
 					}
+
 				}
 			}
 		})
