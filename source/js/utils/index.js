@@ -138,3 +138,80 @@ export function isFunction(func) {
 export function isArray(arr) {
     return Object.prototype.toString.call(arr) === '[object Array]'
 }
+
+
+
+export function decodeURL(url) {
+    function extract(encodedURL) {
+        if (~encodedURL.indexOf('audio_api_unavailable')) {
+            let params = encodedURL.split("?extra=")[1].split("#");
+            let additionalParams = mapper(params[1]);
+
+            params = mapper(params[0]);
+
+            if (!additionalParams || !params) return encodedURL;
+
+            additionalParams = additionalParams.split(String.fromCharCode(9));
+
+            for (let a, r, length = additionalParams.length; length--; ) {
+    			r = additionalParams[length].split(String.fromCharCode(11));
+    			a = r.splice(0, 1, params)[0];
+
+                if (!stringModifier[a]) return encodedURL;
+
+                params = stringModifier[a].apply(null, r)
+            }
+
+            if (params && "http" === params.substr(0, 4)) return params;
+
+        }
+
+        return encodedURL
+    }
+
+    function mapper(params) {
+        let r = "";
+
+        if (!params || params.length % 4 == 1) return !1;
+
+        for (let t, i, a = 0, o = 0; i = params.charAt(o++);) {
+            i = vocabulary.indexOf(i);
+
+            ~i
+            &&
+            (t = a % 4 ? 64 * t + i : i, a++ % 4)
+            &&
+            (r += String.fromCharCode(255 & t >> (-2 * a & 6)));
+        }
+
+        return r
+    }
+
+    const vocabulary = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMN0PQRSTUVWXYZO123456789+/=";
+    const stringModifier = {
+        v: string => string.split("").reverse().join(""),
+        r: (string, i) => {
+            string = string.split("");
+            for (let e, o = vocabulary + vocabulary, length = string.length; length--; )
+                e = o.indexOf(string[length]),
+                ~e && (string[length] = o.substr(e - i, 1));
+            return string.join("")
+        },
+        x: (string, i) => {
+            const chars = string.split('');
+            let acc = [];
+
+            i = i.charCodeAt(0);
+
+            Array
+            .from(chars)
+            .forEach(char =>
+                acc.push(String.fromCharCode(char.charCodeAt(0) ^ i))
+            );
+
+            return acc.join('');
+        }
+    }
+
+    return extract(url)
+}
