@@ -1,3 +1,5 @@
+import { xhr } from '../utils';
+
 class Video {
     constructor() {}
 
@@ -25,6 +27,7 @@ class Video {
 
         chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             if (request.query === 'downloadvideo') {
+                console.log(request, sender, sendResponse)
                 //console.log(request); -> fired multiple times - fix!
                 sendResponse({message: "done"});
             }
@@ -34,18 +37,20 @@ class Video {
             const videoBox = box || videoWrap.querySelector('#mv_box');
 
             if (videoBox) {
+                const html5 = videoBox.querySelector('video');
+                const videoSrc = html5 && html5.getAttribute('src');
+                const isBlob = new RegExp('blob', 'g').test(videoSrc);
                 const qualityItems = parent.querySelectorAll('.videoplayer_quality_select ._item');
                 const sideBar = parent.querySelector('.mv_actions_block>.clear_fix');
 
                 let videoTitle = parent.querySelector('.mv_min_title').innerText;
                 videoTitle = /^\s*$/.test(videoTitle) ? 'VK-Video' : videoTitle;
 
+                if(isBlob) {
 
-                const html5 = videoBox.querySelector('video');
-
-                if (html5) {
-                    const sourceString = html5
-                                        .getAttribute('src')
+                }
+                else if (html5 && !isBlob) {
+                    const sourceString = videoSrc
                                         .split('mp4')
                                         .slice(0, 1)
                                         .toString()
