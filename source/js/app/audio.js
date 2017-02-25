@@ -1,5 +1,5 @@
 import vkObserver from './main';
-import { xhr } from '../utils';
+import { xhr, decodeURL } from '../utils';
 
 class Audio extends vkObserver {
 	constructor() {
@@ -103,9 +103,20 @@ class Audio extends vkObserver {
 	setAudioUrl(options, e) {
 		const { id, title, duration } = options
 		const isFetching = e.target.getAttribute('data-fetching');
+		const isError = e.target.getAttribute('data-fetching-error');
 		const isAudio = e.target.className.indexOf('audio_row') >= 0;
 		const isClaimed = e.target.className.indexOf('claimed') >= 0;
 		const isDeleted = e.target.className.indexOf('audio_deleted') >= 0;
+		const downloadBtn = e.target.querySelector('.download-link');
+
+		// if(isAudio && isFetching && downloadBtn){
+		// 	if(downloadBtn.href.indexOf('audio_api_unavailable') >= 0) {
+		// 		const newUrl = decodeURL(downloadBtn.href)
+		// 		console.log(downloadBtn.href, newUrl)
+		// 	}
+		// }
+
+		if(isError) return;
 
 		if(!isFetching && isAudio && !isClaimed && !isDeleted) {
 			e.target.setAttribute('data-fetching', true);
@@ -122,15 +133,18 @@ class Audio extends vkObserver {
 				body: form
 			})
 			.then(response => {
-				const btn = e.target.querySelector('.audio_play_wrap');
-				const res = response.result
+				const filteredUrls = response.result
 							.split(',')
 							.filter(item => item.indexOf('mp3') >= 0);
-	  			const url =  res[0]
-							.replace(/"/g, '')
-							.replace(/\\/g,"")
-							.split('?')[0];
-				// e.target.removeEventListener('mouseover', this.setAudioUrl, false);
+				const cleanUrl = filteredUrls[0].replace(/"/g, '');
+
+				return decodeURL(cleanUrl);
+			})
+			.then(url => {
+				const btn = e.target.querySelector('.audio_play_wrap');
+
+				e.target.removeEventListener('mouseover', this.setAudioUrl, false);
+
 				const d = document.createElement('a');
 
 				d.className = 'download-link';
@@ -139,15 +153,12 @@ class Audio extends vkObserver {
 				d.addEventListener('click', this.getblob, false);
 				btn.appendChild(d);
 
-				return url;
-			})
-			.then((url) => {
 				options.url = url;
-				return this.displayBitrate(e, options);
+				this.displayBitrate(e, options);
 			})
 			.catch(err => {
-				e.target.setAttribute('data-fetching', false);
-				console.error('SET_AUDIO_URL', err, JSON.stringify(err))
+				e.target.setAttribute('data-fetch-error', true);
+				// console.error('SET_AUDIO_URL', err, JSON.stringify(err))
 			})
 		}
 	}
