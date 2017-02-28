@@ -215,3 +215,27 @@ export function decodeURL(url) {
 
     return extract(url)
 }
+
+export function defineVideoQuality(quality) {
+    let definition;
+
+    switch (quality) {
+        case 240:
+            definition = 'плохом';
+            break;
+        case 360:
+            definition = 'низком';
+            break;
+        case 480:
+            definition = 'хорошем';
+            break;
+        case 720:
+            definition = 'высоком';
+            break;
+        default:
+            definition = 'шикарном';
+            break;
+    }
+
+    return `в ${ definition } качестве`;
+}
