@@ -221,21 +221,21 @@ export function defineVideoQuality(quality) {
 
     switch (quality) {
         case 240:
-            definition = 'плохом';
+            definition = 'SD';
             break;
         case 360:
-            definition = 'низком';
+            definition = 'SD';
             break;
         case 480:
-            definition = 'хорошем';
+            definition = 'SD';
             break;
         case 720:
-            definition = 'высоком';
+            definition = 'HD';
             break;
         default:
-            definition = 'шикарном';
+            definition = 'FullHD';
             break;
     }
 
-    return `в ${ definition } качестве`;
+    return `Загрузить - ${ definition }`;
 }
