@@ -47,11 +47,10 @@
 }
 
 .download-link {
-    display: none;
     position: absolute;
-    right: 33px;
+    right: 2px;
     top: 11px;
-    z-index: 200;
+    z-index: 100;
     opacity: 0.4;
 
     &:hover {
@@ -66,10 +65,10 @@
 
 .wall_audio_rows {
 
-    .download-link {
-        top: 11px;
-        right: 90px;
-    }
+    // .download-link {
+    //     top: 11px;
+    //     right: 90px;
+    // }
 
     .download-all-link {
         position: relative;
@@ -152,11 +151,21 @@
 }
 
 .audio_row {
+    .audio_row_cover_wrap {
+        width: 62px !important;
+        background-repeat: no-repeat;
+    }
+
     &:hover {
-        .bitrate,
-        .download-link {
+        .bitrate {
             display: block;
         }
+    }
+}
+
+.audio_row_current {
+    .download-link {
+        top: 5px;
     }
 }
 
@@ -281,13 +290,14 @@ embed {
 
 .cached-status {
     position: absolute;
-    right: 0px;
+    right: -11px;
     top: 5px;
-    z-index: 100;
+    font-size: 11px;
     color: rgb(43, 88, 122);
-    background-color: rgb(237, 241, 245);
+    min-width: 32px;
     padding: 3px;
-    min-width: 25px;
+    background-color: rgb(237, 241, 245);
+    z-index: 100;
 }
 
 #gp_back,

@@ -46,7 +46,7 @@ class pageMedia {
             (mutations) => {
                 mutations.forEach( (mutation) => {
                     const node = mutation.target;
-                    const playlist = node.querySelector('.audio_playlist_wrap');
+                    const playlist = node.querySelector('.audio_page_sections');
                     const v = node.querySelector('#mv_layer_wrap');//video modal
                     const m = node.querySelector('#wk_layer_wrap ');//wall post modal
                     const ticker = node.querySelector('.eltt top_audio_layer');

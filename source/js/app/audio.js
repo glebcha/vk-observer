@@ -104,7 +104,7 @@ class Audio extends vkObserver {
 		const { id, title, duration } = options
 		const isFetching = e.target.getAttribute('data-fetching');
 		const isError = e.target.getAttribute('data-fetching-error');
-		const isAudio = e.target.className.indexOf('audio_row') >= 0;
+		const isAudio = e.target.className.indexOf('_audio_row') >= 0;
 		const isClaimed = e.target.className.indexOf('claimed') >= 0;
 		const isDeleted = e.target.className.indexOf('audio_deleted') >= 0;
 		const downloadBtn = e.target.querySelector('.download-link');
@@ -116,9 +116,9 @@ class Audio extends vkObserver {
 		// 	}
 		// }
 
-		if(isError) return;
+		if(isError || isFetching || isClaimed || isDeleted) return;
 
-		if(!isFetching && isAudio && !isClaimed && !isDeleted) {
+		if(isAudio && !downloadBtn) {
 			e.target.setAttribute('data-fetching', true);
 
 			const form = new FormData();
@@ -136,12 +136,16 @@ class Audio extends vkObserver {
 				const filteredUrls = response.result
 							.split(',')
 							.filter(item => item.indexOf('mp3') >= 0);
-				const cleanUrl = filteredUrls[0].replace(/"/g, '');
 
-				return decodeURL(cleanUrl);
+				const cleanUrl = filteredUrls[0]
+									.replace(/"/g, '')
+									.split('?')[0];
+
+				return cleanUrl;
+				//return decodeURL(cleanUrl);
 			})
 			.then(url => {
-				const btn = e.target.querySelector('.audio_play_wrap');
+				const btn = e.target.querySelector('.audio_row_cover_wrap');
 
 				e.target.removeEventListener('mouseover', this.setAudioUrl, false);
 
@@ -173,8 +177,8 @@ class Audio extends vkObserver {
 
 		if (audioBlocks.length > 0) {
 			audioBlocks.forEach(audioBlock => {
-				const btn = audioBlock.querySelector('.audio_play_wrap');
-				const btnPlay = btn.querySelector('.audio_play');
+				const btn = audioBlock.querySelector('.audio_row_cover_wrap');
+				const btnPlay = btn.querySelector('.audio_row_cover_play_icon');
 				const audioId = audioBlock.getAttribute('data-full-id');
 				const durationBlock = audioBlock.querySelector('.audio_duration').innerText;
 				const durationMinutes = durationBlock.split(':')[0];
