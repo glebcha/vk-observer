@@ -109,14 +109,12 @@ class Audio extends vkObserver {
 		const isDeleted = e.target.className.indexOf('audio_deleted') >= 0;
 		const downloadBtn = e.target.querySelector('.download-link');
 
-		// if(isAudio && isFetching && downloadBtn){
-		// 	if(downloadBtn.href.indexOf('audio_api_unavailable') >= 0) {
-		// 		const newUrl = decodeURL(downloadBtn.href)
-		// 		console.log(downloadBtn.href, newUrl)
-		// 	}
-		// }
-
 		if(isError || isFetching || isClaimed || isDeleted) return;
+
+		// if(downloadBtn && downloadBtn.href.indexOf('audio_api_unavailable') >= 0) {
+ 		// 	const newUrl = decodeURL(downloadBtn.href)
+		// 	console.log(downloadBtn.href, newUrl)
+		// }
 
 		if(isAudio && !downloadBtn) {
 			e.target.setAttribute('data-fetching', true);
@@ -137,12 +135,9 @@ class Audio extends vkObserver {
 							.split(',')
 							.filter(item => item.indexOf('mp3') >= 0);
 
-				const cleanUrl = filteredUrls[0]
-									.replace(/"/g, '')
-									.split('?')[0];
+				const cleanUrl = filteredUrls[0].replace(/"/g, '');
 
-				return cleanUrl;
-				//return decodeURL(cleanUrl);
+				return decodeURL(cleanUrl);
 			})
 			.then(url => {
 				const btn = e.target.querySelector('.audio_row_cover_wrap');
