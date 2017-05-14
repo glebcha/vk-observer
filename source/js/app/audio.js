@@ -108,13 +108,9 @@ class Audio extends vkObserver {
 		const isClaimed = e.target.className.indexOf('claimed') >= 0;
 		const isDeleted = e.target.className.indexOf('audio_deleted') >= 0;
 		const downloadBtn = e.target.querySelector('.download-link');
+		const btn = e.target.querySelector('.audio_row_cover_wrap');
 
 		if(isError || isFetching || isClaimed || isDeleted) return;
-
-		// if(downloadBtn && downloadBtn.href.indexOf('audio_api_unavailable') >= 0) {
- 		// 	const newUrl = decodeURL(downloadBtn.href)
-		// 	console.log(downloadBtn.href, newUrl)
-		// }
 
 		if(isAudio && !downloadBtn) {
 			e.target.setAttribute('data-fetching', true);
@@ -135,16 +131,19 @@ class Audio extends vkObserver {
 							.split(',')
 							.filter(item => item.indexOf('mp3') >= 0);
 
-				const cleanUrl = filteredUrls[0].replace(/"/g, '');
+				const cleanUrl = filteredUrls[0].replace(/^"(.+(?="$))"$/, '$1');
 
 				return decodeURL(cleanUrl);
 			})
 			.then(url => {
-				const btn = e.target.querySelector('.audio_row_cover_wrap');
 
-				e.target.removeEventListener('mouseover', this.setAudioUrl, false);
+				if(url.indexOf('audio_api_unavailable') >= 0) {
+		 			throw new Error(url)
+				}
 
 				const d = document.createElement('a');
+
+				e.target.removeEventListener('mouseover', this.setAudioUrl, false);
 
 				d.className = 'download-link';
 				d.href = url;
