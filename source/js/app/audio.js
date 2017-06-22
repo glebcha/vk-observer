@@ -102,18 +102,18 @@ class Audio extends vkObserver {
 
 	setAudioUrl(options, e) {
 		const { id, title, duration } = options
-		const isFetching = e.target.getAttribute('data-fetching');
 		const isError = e.target.getAttribute('data-fetching-error');
 		const isAudio = e.target.className.indexOf('_audio_row') >= 0;
 		const isClaimed = e.target.className.indexOf('claimed') >= 0;
 		const isDeleted = e.target.className.indexOf('audio_deleted') >= 0;
-		const downloadBtn = e.target.querySelector('.download-link');
-		const btn = e.target.querySelector('.audio_row_cover_wrap');
+		const btn = e.target.querySelector('.audio_row__inner');
+		const isFetching = btn && btn.getAttribute('data-fetching');
+		const downloadBtn = btn && btn.querySelector('.download-link');
 
-		if(isError || isFetching || isClaimed || isDeleted) return;
+		if(isError || isFetching || isClaimed || isDeleted || downloadBtn) return;
 
-		if(isAudio && !downloadBtn) {
-			e.target.setAttribute('data-fetching', true);
+		if(isAudio && btn) {
+			btn.setAttribute('data-fetching', true);
 
 			const form = new FormData();
 
@@ -141,18 +141,22 @@ class Audio extends vkObserver {
 		 			throw new Error(url)
 				}
 
-				const d = document.createElement('a');
+				if(!downloadBtn) {
+					const d = document.createElement('a');
 
-				e.target.removeEventListener('mouseover', this.setAudioUrl, false);
+					e.target.removeEventListener('mouseover', this.setAudioUrl, false);
 
-				d.className = 'download-link';
-				d.href = url;
-				d.setAttribute('download', title);
-				d.addEventListener('click', this.getblob, false);
-				btn.appendChild(d);
+					d.className = 'download-link';
+					d.href = url;
+					d.setAttribute('download', title);
+					d.addEventListener('click', this.getblob, false);
+					btn.insertBefore(d, btn.firstChild);
 
-				options.url = url;
-				this.displayBitrate(e, options);
+					options.url = url;
+					this.displayBitrate(e, options);
+				}
+
+
 			})
 			.catch(err => {
 				e.target.setAttribute('data-fetch-error', true);
@@ -171,18 +175,18 @@ class Audio extends vkObserver {
 
 		if (audioBlocks.length > 0) {
 			audioBlocks.forEach(audioBlock => {
-				const btn = audioBlock.querySelector('.audio_row_cover_wrap');
-				const btnPlay = btn.querySelector('.audio_row_cover_play_icon');
+				const btn = audioBlock.querySelector('.audio_row_content');
+				const btnPlay = btn.querySelector('.audio_row__play_btn');
 				const audioId = audioBlock.getAttribute('data-full-id');
-				const durationBlock = audioBlock.querySelector('.audio_duration').innerText;
+				const durationBlock = audioBlock.querySelector('.audio_row__duration').innerText;
 				const durationMinutes = durationBlock.split(':')[0];
 				const durationSeconds = durationBlock.split(':')[1];
 				const duration = (+durationMinutes * 60) + +durationSeconds;
 
 				// if (!btn.querySelector('.download-link') && linkContainer.indexOf('mp3') > 0) {
 				if (!btn.querySelector('.download-link')) {
-					const audioTitle = audioBlock.querySelector('.audio_title').innerText;
-					const audioArtist = audioBlock.querySelector('.audio_performer').innerText;
+					const audioTitle = audioBlock.querySelector('.audio_row__title_inner').innerText;
+					const audioArtist = audioBlock.querySelector('.audio_row__performer').innerText;
 					const audioName = audioArtist + "-" + audioTitle;
 					const audioFullName = audioName.replace(/(<([^>]+)>)|([<>:"\/\\|?*.])/ig, '');
 					const options = {id: audioId, title: audioFullName, duration};
