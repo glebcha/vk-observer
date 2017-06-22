@@ -101,19 +101,27 @@ class Audio extends vkObserver {
 	}
 
 	setAudioUrl(options, e) {
-		const { id, title, duration } = options
+		const { id, title, duration } = options;
+		const rules = ['_audio_row', 'audio_row__inner'];
+		const matchedRules = rules.filter(rule => e.target.className.indexOf(rule) >= 0);
 		const isError = e.target.getAttribute('data-fetching-error');
-		const isAudio = e.target.className.indexOf('_audio_row') >= 0;
+		const isAudio = matchedRules && matchedRules.length > 0;
 		const isClaimed = e.target.className.indexOf('claimed') >= 0;
 		const isDeleted = e.target.className.indexOf('audio_deleted') >= 0;
-		const btn = e.target.querySelector('.audio_row__inner');
-		const isFetching = btn && btn.getAttribute('data-fetching');
-		const downloadBtn = btn && btn.querySelector('.download-link');
+
+		const container = e.target.className.indexOf('audio_row__inner') >= 0
+							?
+							e.target
+							:
+							e.target.querySelector('.audio_row__inner');
+
+		const isFetching = container && container.getAttribute('data-fetching');
+		const downloadBtn = container && container.querySelector('.download-link');
 
 		if(isError || isFetching || isClaimed || isDeleted || downloadBtn) return;
 
-		if(isAudio && btn) {
-			btn.setAttribute('data-fetching', true);
+		if(isAudio && container) {
+			container.setAttribute('data-fetching', true);
 
 			const form = new FormData();
 
@@ -128,8 +136,8 @@ class Audio extends vkObserver {
 			})
 			.then(response => {
 				const filteredUrls = response.result
-							.split(',')
-							.filter(item => item.indexOf('mp3') >= 0);
+										.split(',')
+										.filter(item => item.indexOf('mp3') >= 0);
 
 				const cleanUrl = filteredUrls[0].replace(/^"(.+(?="$))"$/, '$1');
 
@@ -150,7 +158,7 @@ class Audio extends vkObserver {
 					d.href = url;
 					d.setAttribute('download', title);
 					d.addEventListener('click', this.getblob, false);
-					btn.insertBefore(d, btn.firstChild);
+					container.insertBefore(d, container.firstChild);
 
 					options.url = url;
 					this.displayBitrate(e, options);
@@ -176,7 +184,7 @@ class Audio extends vkObserver {
 		if (audioBlocks.length > 0) {
 			audioBlocks.forEach(audioBlock => {
 				const btn = audioBlock.querySelector('.audio_row_content');
-				const btnPlay = btn.querySelector('.audio_row__play_btn');
+				// const btnPlay = btn.querySelector('.audio_row__inner');
 				const audioId = audioBlock.getAttribute('data-full-id');
 				const durationBlock = audioBlock.querySelector('.audio_row__duration').innerText;
 				const durationMinutes = durationBlock.split(':')[0];
