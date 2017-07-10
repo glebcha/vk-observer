@@ -1,26 +1,45 @@
 {
-  "name": "gulp-quick-start",
-  "version": "1.0.4",
-  "description": "",
-  "main": "gulp",
+  "name": "vk-observer",
+  "version": "2.1.4",
+  "description": "VK music/video download",
   "repository": {
     "type": "git",
-    "url": "https://gist.github.com/glebcha/27310a9fe5af174de825"
+    "url": "https://github.com/glebcha/vk-observer.git"
   },
   "author": "Glebcha",
   "license": "MIT",
-  "homepage": "https://gist.github.com/glebcha/27310a9fe5af174de825",
-  "dependencies": {
-    "babel": "^6.3.13"
-  },
+  "homepage": "https://github.com/glebcha/vk-observer.git",
   "scripts": {
-    "preinstall": "npm i -g gulp gulp-rimraf gulp-cache gulp-size gulp-concat gulp-jade gulp-minify-css gulp-jshint gulp-less less-plugin-autoprefix gulp-base64 gulp-rename gulp-imagemin gulp-uglify gulp-notify browserify babelify babel-preset-es2015 browser-sync event-stream vinyl-source-stream gulp-sourcemaps",
-    "postinstall": "npm link gulp gulp-rimraf gulp-cache gulp-size gulp-concat gulp-jade gulp-minify-css gulp-jshint gulp-less less-plugin-autoprefix gulp-base64 gulp-rename gulp-imagemin gulp-uglify gulp-notify browserify babelify babel-preset-es2015 browser-sync event-stream vinyl-source-stream gulp-sourcemaps",
-    "prepare": "npm run preinstall && npm run postinstall",
     "start": "NODE_ENV=production gulp && gulp watch",
     "start-dev": "NODE_ENV=development gulp && gulp watch"
   },
   "devDependencies": {
-    "gulp-sourcemaps": "^1.6.0"
+    "gulp-sourcemaps": "^1.12.0",
+    "gulp-util": "^3.0.8",
+    "babel": "^6.3.13",
+    "babel-preset-es2015": "^6.24.1",
+    "babelify": "^7.3.0",
+    "browser-sync": "^2.18.12",
+    "browserify": "^14.4.0",
+    "event-stream": "^3.3.4",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-base64": "^0.1.3",
+    "gulp-cache": "^0.4.6",
+    "gulp-concat": "^2.6.1",
+    "gulp-if": "^2.0.2",
+    "gulp-imagemin": "^3.3.0",
+    "gulp-jade": "^1.1.0",
+    "gulp-jshint": "^2.0.4",
+    "gulp-less": "^3.3.2",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-notify": "^3.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-rimraf": "^0.2.1",
+    "gulp-size": "^2.1.0",
+    "gulp-uglify": "^3.0.0",
+    "jshint": "^2.9.5",
+    "less-plugin-autoprefix": "^1.5.1",
+    "vinyl-source-stream": "^1.1.0"
   }
 }
