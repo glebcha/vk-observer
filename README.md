@@ -17,7 +17,7 @@ https://vk.com/vkobserverchrome
 Я буду рад, если позаимствовав весь код или его часть, ты придешь к успеху не став мудаком.
 ```
 
-###В текущей версии:
+### В текущей версии:
 
 * загрузка видео с именем файла как в интерфейсе Вконтакте
 
@@ -35,16 +35,16 @@ https://vk.com/vkobserverchrome
 
 * поддерживается скробблинг и добавление в любимые треки для Last.fm
 
-###В планах:
+### В планах:
 
 * еще больше Last.fm 
 
-###Скриншоты:
+### Скриншоты:
 ![Screenshot0](http://aviaps.ru/images/vkobserver-last.png)
 * * *
 ![Screenshot1](http://aviaps.ru/images/vkobserver-settings.png)
 * * *
-![Screenshot2](http://aviaps.ru/images/vkobserver-video.png)
+![Screenshot2](http://i.imgur.com/vY4Kwrg.png)
 * * *
-![Screenshot3](http://aviaps.ru/images/vkobserver-list.png)
+![Screenshot3](http://i.imgur.com/zwoPh97.png)
 
