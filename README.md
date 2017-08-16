@@ -42,9 +42,7 @@ https://vk.com/vkobserverchrome
 ### Скриншоты:
 ![Screenshot0](http://aviaps.ru/images/vkobserver-last.png)
 * * *
-![Screenshot1](http://aviaps.ru/images/vkobserver-settings.png)
+![Screenshot1](http://i.imgur.com/vY4Kwrg.png)
 * * *
-![Screenshot2](http://i.imgur.com/vY4Kwrg.png)
-* * *
-![Screenshot3](http://i.imgur.com/zwoPh97.png)
+![Screenshot2](http://i.imgur.com/zwoPh97.png)
 
