@@ -215,6 +215,7 @@ class Audio extends vkObserver {
 	getA(entries) {
 		let posts = entries || document.querySelectorAll('.post');
 		posts = [].slice.call(posts);
+		
 		const getAllAudios = event => {
 			event.preventDefault();
 			const item = event.target.parentNode;
