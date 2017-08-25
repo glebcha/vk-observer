@@ -139,23 +139,22 @@ export function isArray(arr) {
     return Object.prototype.toString.call(arr) === '[object Array]'
 }
 
-
-
 export function decodeURL(url) {
     function extract(encodedURL) {
         if (~encodedURL.indexOf('audio_api_unavailable')) {
+
             let params = encodedURL.split("?extra=")[1].split("#");
-            let additionalParams = mapper(params[1]);
+            let additionalParams = '' === params[1] ? '' : mapper(params[1]);
 
             params = mapper(params[0]);
 
-            if (!additionalParams || !params) return encodedURL;
+            if (typeof additionalParams != 'string' || !params) return encodedURL;
 
-            additionalParams = additionalParams.split(String.fromCharCode(9));
-
+            additionalParams = additionalParams ? additionalParams.split(String.fromCharCode(9)) : [];
+        
             for (let a, r, length = additionalParams.length; length--; ) {
-    			r = additionalParams[length].split(String.fromCharCode(11));
-    			a = r.splice(0, 1, params)[0];
+                r = additionalParams[length].split(String.fromCharCode(11));
+                a = r.splice(0, 1, params)[0];
 
                 if (!stringModifier[a]) return encodedURL;
 
@@ -172,7 +171,7 @@ export function decodeURL(url) {
     function mapper(params) {
         let r = "";
 
-        if (!params || params.length % 4 == 1) return !1;
+        if (!params || params.length % 4 === 1) return !1;
 
         for (let t, i, a = 0, o = 0; i = params.charAt(o++);) {
             i = vocabulary.indexOf(i);
@@ -187,15 +186,48 @@ export function decodeURL(url) {
         return r
     }
 
+    function bin(string, i) {
+        const array = [];
+        
+        if (string.length) {
+            let count = string.length;
+            
+            for (i = Math.abs(i); count--;) {
+                array[count] = (i += i * (count + string.length) / i) % string.length | 0;
+            }
+        }
+        
+        return array;
+    }
+
     const vocabulary = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMN0PQRSTUVWXYZO123456789+/=";
     const stringModifier = {
         v: string => string.split("").reverse().join(""),
         r: (string, i) => {
             string = string.split("");
+
             for (let e, o = vocabulary + vocabulary, length = string.length; length--; )
                 e = o.indexOf(string[length]),
                 ~e && (string[length] = o.substr(e - i, 1));
+
             return string.join("")
+        },
+        s: (string, i) => {
+            if (string.length) {
+                const binData = bin(string, i);
+                let a = 0;
+                
+                for (string = string.split(''); ++a < string.length;) {
+                    const startIndex = binData[string.length - 1 - a];
+                    const amount = 1;
+
+                    string[a] = string.splice(startIndex, amount, string[a])[0];
+                }
+                
+                string = string.join('');
+            }
+            
+            return string;
         },
         x: (string, i) => {
             const chars = string.split('');
