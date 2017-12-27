@@ -139,10 +139,10 @@ export function isArray(arr) {
     return Object.prototype.toString.call(arr) === '[object Array]'
 }
 
-export function decodeURL(url) {
-    function extract(encodedURL) {
+export function decodeURL(t, userId) {
+    function o(encodedURL) {
         if (~encodedURL.indexOf('audio_api_unavailable')) {
-
+            
             let params = encodedURL.split("?extra=")[1].split("#");
             let additionalParams = '' === params[1] ? '' : mapper(params[1]);
 
@@ -165,7 +165,7 @@ export function decodeURL(url) {
 
         }
 
-        return encodedURL
+        return encodedURL;
     }
 
     function mapper(params) {
@@ -183,26 +183,24 @@ export function decodeURL(url) {
             (r += String.fromCharCode(255 & t >> (-2 * a & 6)));
         }
 
-        return r
+        return r;
     }
 
-    function bin(string, i) {
-        const array = [];
-        
-        if (string.length) {
-            let count = string.length;
-            
-            for (i = Math.abs(i); count--;) {
-                array[count] = (i += i * (count + string.length) / i) % string.length | 0;
-            }
+    function bin(t, e) {
+        const o = [];
+
+        if (t.length) {
+            let a = t.length;
+            for (e = Math.abs(e); a--; )
+                e = (t.length * (a + 1) ^ e + a) % t.length,
+                o[a] = e
         }
-        
-        return array;
+        return o
     }
 
     const vocabulary = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMN0PQRSTUVWXYZO123456789+/=";
     const stringModifier = {
-        v: string => string.split("").reverse().join(""),
+        v: (t) => t.split("").reverse().join(""),
         r: (string, i) => {
             string = string.split("");
 
@@ -229,23 +227,18 @@ export function decodeURL(url) {
             
             return string;
         },
-        x: (string, i) => {
-            const chars = string.split('');
-            let acc = [];
-
-            i = i.charCodeAt(0);
-
-            Array
-            .from(chars)
-            .forEach(char =>
-                acc.push(String.fromCharCode(char.charCodeAt(0) ^ i))
-            );
-
-            return acc.join('');
+        i: (t, e) => stringModifier.s(t, e ^ userId),
+        x: (t, e) => {
+            var i = [];
+            return e = e.charCodeAt(0),
+            each(t.split(""), function(t, o) {
+                i.push(String.fromCharCode(o.charCodeAt(0) ^ e))
+            }),
+            i.join("")
         }
-    }
-
-    return extract(url)
+    };
+    
+    return o(t);    
 }
 
 export function defineVideoQuality(quality) {
