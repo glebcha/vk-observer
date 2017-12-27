@@ -4,6 +4,22 @@ import { xhr, decodeURL } from '../utils';
 class Audio extends vkObserver {
 	constructor() {
 		super();
+		this.id = null;
+	}
+
+	getUserId() {
+		const pattern = new RegExp('queue_connection_events_queue', 'gi');
+
+		if (!this.id) {
+			for (let key in localStorage) {
+				if (localStorage.hasOwnProperty(key) && key.match(pattern)) {
+					this.id = key.replace(/\D+/g, '');
+					break;
+				}
+			}
+		}
+
+		return this.id;
 	}
 
 	getblob(event) {
@@ -127,7 +143,7 @@ class Audio extends vkObserver {
 						
 			const cleanUrl = filteredUrls[0].replace(/^"(.+(?="$))"$/, '$1');
 		
-			return decodeURL(cleanUrl);
+			return decodeURL(cleanUrl, this.getUserId());
 		})
 		.then(url => {
 			let error = false;
@@ -157,7 +173,7 @@ class Audio extends vkObserver {
 		.catch(err => {
 			target.removeAttribute('data-fetching');
 			target.setAttribute('data-fetch-error', true);
-			//console.error('SET_AUDIO_URL', err, JSON.stringify(err))
+			// console.error('SET_AUDIO_URL', err, JSON.stringify(err))
 		})
 	}
 
