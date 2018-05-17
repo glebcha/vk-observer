@@ -193,7 +193,7 @@ class Audio extends vkObserver {
 				if (!btn.querySelector('.download-link')) {
 					const self = this;
 					const audioTitle = audioBlock.querySelector('.audio_row__title_inner').innerText;
-					const audioArtist = audioBlock.querySelector('.audio_row__performer').innerText;
+					const audioArtist = audioBlock.querySelector('.audio_row__performers').innerText;
 					const audioName = audioArtist + "-" + audioTitle;
 					const audioFullName = audioName.replace(/(<([^>]+)>)|([<>:"\/\\|?*.])/ig, '');
 					const options = {id: audioId, title: audioFullName, duration};
