@@ -22,11 +22,11 @@ class Video {
                                 sourceString.split('?').slice(0, 1).toString();
 
                     const isBlob = new RegExp('blob', 'g').test(videoSrc);
-                    const qualityItem = parent.querySelector('.videoplayer_quality ._label_text');
+                    const qualityItem = parent.querySelector('.videoplayer_quality_select_label_text');
                     const qualityValue = qualityItem && parseInt(qualityItem.innerHTML);
                     const quality = qualityValue && defineVideoQuality(qualityValue);
                     const sideBar = parent.querySelector('.mv_actions_block>.clear_fix');
-                    const downloadBtn = sideBar && sideBar.querySelector('.mv_get_btn');
+                    const downloadBtn = sideBar && sideBar.querySelector('.video_btn');
 
                     let videoTitle = parent.querySelector('.mv_min_title').innerText;
                     videoTitle = /^\s*$/.test(videoTitle) ? 'VK-Video' : videoTitle;
@@ -35,9 +35,19 @@ class Video {
                         const btn = document.createElement('a');
 
                         btn.href = videoSrc;
-                        btn.innerHTML = quality;
+                        btn.innerHTML = `<span class='like_button_label'>${quality}</span>`;
                         btn.setAttribute('download', videoTitle);
-                        btn.className = 'mv_get_btn flat_button';
+                        btn.className = 'like_btn video_btn';
+                        btn.addEventListener('click', function(event) {
+                            const {href, download} = this;
+
+                            event.preventDefault();
+                            chrome.runtime.sendMessage({
+                                id: 'video', 
+                                videoSrc: href, 
+                                videoTitle: download.replace(/(<([^>]+)>)|([<>:"\/\\|?*.])/ig, '')
+                            });
+                        });
                         sideBar.appendChild(btn);
                         this.currentQuality = qualityValue;
                     }

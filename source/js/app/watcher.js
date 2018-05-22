@@ -26,7 +26,7 @@ class mediaWatcher {
                     const blocks = node.querySelectorAll('.post');
                     const videoModal = document.querySelector('.video_box_wrap');
                     const isVideoModal = node.className === 'video_box_wrap';
-                    const isVideoQuality = node.className === '_label_text';
+                    const isVideoQuality = node.className === 'videoplayer_quality_select_label_text';
                     const canChangeQuality = isVideoModal || isVideoQuality;
 
                     if (videoModal && canChangeQuality) {
