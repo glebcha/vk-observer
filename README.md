@@ -3,9 +3,7 @@
 Добавляет кнопку загрузки для каждой музыкальной записи в любом месте (стена, плеер и т.д.).
 Никакой рекламы, никаких трекеров и шпионов, открытый исходный код.
 
-Chrome webstore:
-
-https://chrome.google.com/webstore/detail/vk-observer/piiadkppcjhcjnekceedinjidaeliabd
+Расширение было удалено из Chrome webstore ввиду жалоб ВК.
 
 Группа Вконтакте:
 
