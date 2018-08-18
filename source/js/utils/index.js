@@ -60,8 +60,11 @@ export function xhr(options) {
       method='GET',
       body=null,
       headers=[],
-      optional={}
+      responseType,
+      optional={},
+      onProgress = () => {},
     } = options
+    const isBlob = responseType && responseType === 'blob';
     const calculateBitrate = optional && optional.calculateBitrate;
 
     return new Promise(
@@ -77,9 +80,15 @@ export function xhr(options) {
               )
             }
 
+            if(responseType) {
+                request.responseType = responseType
+            }
+
             if(calculateBitrate) {
                 validStatus = 206;
             }
+
+            request.onprogress = onProgress
 
             request.onreadystatechange = function() {
                 if(this.readyState === 4) {
@@ -102,12 +111,15 @@ export function xhr(options) {
 
                         }
 
-                        resolve({
-                            result: this.response,
-                            optional
-                        });
-                    }
-                    else {
+                        resolve(
+                            isBlob ? 
+                            this.response : 
+                            {
+                                result: this.response,
+                                optional
+                            }
+                        );
+                    } else {
                         const { status, statusText } = this;
 
                         console.error('XHR Helper', status, statusText);
