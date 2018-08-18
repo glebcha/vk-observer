@@ -102,40 +102,40 @@ window.onload = () => {
     };
 
     let changeBitrate = (event) => {
-        let cacheStatus = '',
-            scrobbleStatus = '';
+        // let cacheStatus = '',
+        //     scrobbleStatus = '';
 
-        cacheStatus = toggleCache.checked ? 'enabled' : 'disabled';
-        scrobbleStatus = toggleScrobble.checked ? 'enabled' : 'disabled';
+        // cacheStatus = toggleCache.checked ? 'enabled' : 'disabled';
+        // scrobbleStatus = toggleScrobble.checked ? 'enabled' : 'disabled';
 
-        storage.get('settings', function(data) {
-            var state = data.settings,
-                options = {
-                    "bitrate": 'enabled',
-                    "cache": cacheStatus,
-                    "scrobble": scrobbleStatus
-                };
-            toggleBitrate.checked = true;
-            if (state.bitrate === 'enabled') {
-                toggleBitrate.checked = false;
-                options.bitrate = 'disabled';
-            }
-            saveOption(options);
-        });
+        // storage.get('settings', function(data) {
+        //     var state = data.settings,
+        //         options = {
+        //             "bitrate": 'enabled',
+        //             "cache": cacheStatus,
+        //             "scrobble": scrobbleStatus
+        //         };
+        //     toggleBitrate.checked = true;
+        //     if (state.bitrate === 'enabled') {
+        //         toggleBitrate.checked = false;
+        //         options.bitrate = 'disabled';
+        //     }
+        //     saveOption(options);
+        // });
     };
 
     let changeScrobble = (event) => {
         let cacheStatus = '',
             bitrateStatus = '';
 
-        cacheStatus = toggleCache.checked ? 'enabled' : 'disabled';
+        // cacheStatus = toggleCache.checked ? 'enabled' : 'disabled';
         bitrateStatus = toggleBitrate.checked ? 'enabled' : 'disabled';
 
         storage.get('settings', (data) => {
             var state = data.settings,
                 options = {
                     "bitrate": bitrateStatus,
-                    "cache": cacheStatus,
+                    // "cache": cacheStatus,
                     "scrobble": 'enabled'
                 };
             toggleScrobble.checked = true;
