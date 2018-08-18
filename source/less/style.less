@@ -160,6 +160,33 @@
         width: 62px !important;
         background-repeat: no-repeat;
     }
+    //FIXME
+    &[data-fetched] {
+        .audio_row__play_btn {
+            border: none !important;
+
+            &:after {
+                display: none !important;
+            }
+        }
+    }
+
+    &[data-fetch-error] {
+        .audio_row__play_btn {
+            border: 1px red solid;
+            border-radius: 50%;
+
+            &:after {
+                position: absolute;
+                top: 0;
+                right: -10px;
+                display: block;
+                font-size: 23px;
+                color: red;
+                content: '!';
+            }
+        }
+    }
 
     &:hover {
         .bitrate {

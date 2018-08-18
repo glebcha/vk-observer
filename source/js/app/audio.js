@@ -5,6 +5,7 @@ class Audio extends vkObserver {
 	constructor() {
 		super();
 		this.id = null;
+		this.getAllAudios = this.getAllAudios.bind(this);
 	}
 
 	getUserId() {
@@ -22,55 +23,53 @@ class Audio extends vkObserver {
 		return this.id;
 	}
 
-	getblob(event) {
+	getBlob(event) {
 		const el = event.target;
 		const wrap = el.parentNode;
 		const url = el.href;
-		const cacheStatus = localStorage.VkObserver_cache;
 		const downloaded = event.target.getAttribute('data-enabled');
 
-		if (cacheStatus === 'enabled' && !downloaded) {
-			const winUrl = window.URL || window.webkitURL;
-			const xhr = new XMLHttpRequest();
+		if (!downloaded) {
 			const statusBlock = document.createElement('span');
 
 			event.target.setAttribute('data-enabled', true);
 			event.preventDefault();
 			event.stopPropagation();
 
-			xhr.responseType = 'blob';
 			el.style.visibility = 'hidden';
 			statusBlock.className = 'cached-status';
 			wrap.appendChild(statusBlock);
-			xhr.onprogress = (completion) => {
-				const cachedCompletion = Math.floor(completion.loaded / completion.total * 100);
-				const cachedPercent = cachedCompletion + '%';
 
-				statusBlock.innerHTML = '';
-				statusBlock.innerHTML = cachedPercent;
+			xhr({
+				url,
+				method: 'GET',
+				responseType: 'blob',
+				onProgress: (completion) => {
+					const cachedCompletion = Math.floor(completion.loaded / completion.total * 100);
+					const cachedPercent = cachedCompletion + '%';
+	
+					statusBlock.innerHTML = '';
+					statusBlock.innerHTML = cachedPercent;
+	
+					if (cachedPercent === '100%') {
+						statusBlock.remove();
+						el.style.visibility = 'visible';
+					}
+				},
+			}).then((response) => {
+				const winUrl = window.URL || window.webkitURL;
+				const blob = new window.Blob([response], {
+					'type': 'audio/mpeg'
+				});
+				const link = winUrl.createObjectURL(blob);
 
-				if (cachedPercent === '100%') {
-					statusBlock.remove();
-					el.style.visibility = 'visible';
-				}
+				el.href = link;
 
-			};
-			xhr.onreadystatechange = function(response) {
-				if (xhr.readyState === 4 && xhr.status === 200) {
-					const blob = new window.Blob([this.response], {
-						'type': 'audio/mpeg'
-					});
-					const link = winUrl.createObjectURL(blob);
-
-					el.href = link;
-					el.click();
-					el.removeEventListener('click', this.getblob, false);
-					//winUrl.revokeObjectURL(link);
-					//el.href = getLink;
-				}
-			};
-			xhr.open('GET', url, true);
-			xhr.send(null);
+				el.click();
+				el.removeEventListener('click', this.getBlob, false);
+				// winUrl.revokeObjectURL(link);
+				// el.href = getLink;
+			});
 		}
 
 	}
@@ -131,7 +130,7 @@ class Audio extends vkObserver {
 		form.append('al', '1');
 		form.append('ids', id);
 					
-		xhr({
+		return xhr({
 			url: 'https://vk.com/al_audio.php',
 			method: 'POST',
 			body: form
@@ -147,22 +146,24 @@ class Audio extends vkObserver {
 		})
 		.then(url => {
 			let error = false;
+
+			target.removeAttribute('data-fetching');
+			target.removeAttribute('data-fetch-error');
 		
 			if(url.indexOf('audio_api_unavailable') >= 0) {
 				error = true;
-				target.removeAttribute('data-fetching');
 				target.setAttribute('data-fetch-error', true);
 			}
 		
 			if(!error && !downloadBtn) {
 				const d = document.createElement('a');
-		
+
 				target.setAttribute('data-fetched', true);
 		
 				d.className = 'download-link';
 				d.href = url;
 				d.setAttribute('download', title);
-				d.addEventListener('click', this.getblob, false);
+				d.addEventListener('click', this.getBlob, false);
 				audioInfo.insertBefore(d, audioInfo.firstChild);
 		
 				options.url = url;
@@ -177,6 +178,23 @@ class Audio extends vkObserver {
 		})
 	}
 
+	getAudioBlockOptions(audioBlock) {
+		const audioId = audioBlock.getAttribute('data-full-id');
+		const audioTitle = audioBlock.querySelector('.audio_row__title_inner').innerText;
+		const audioArtist = audioBlock.querySelector('.audio_row__performers').innerText;
+		const audioName = audioArtist + "-" + audioTitle;
+		const audioFullName = audioName.replace(/(<([^>]+)>)|([<>:"\/\\|?*.])/ig, '');
+		
+		const durationBlock = audioBlock.querySelector('.audio_row__duration').innerText;
+		const durationMinutes = durationBlock.split(':')[0];
+		const durationSeconds = durationBlock.split(':')[1];
+		const duration = (+durationMinutes * 60) + +durationSeconds;
+
+		const options = {id: audioId, title: audioFullName, duration};
+
+		return options;
+	}
+
 	showA(audios) {
 		let audioBlocks = audios || document.querySelectorAll('.audio_row');
 		audioBlocks = [].slice.call(audioBlocks);
@@ -184,19 +202,10 @@ class Audio extends vkObserver {
 		if (audioBlocks.length > 0) {
 			audioBlocks.forEach(audioBlock => {
 				const btn = audioBlock.querySelector('.audio_row_content');
-				const audioId = audioBlock.getAttribute('data-full-id');
-				const durationBlock = audioBlock.querySelector('.audio_row__duration').innerText;
-				const durationMinutes = durationBlock.split(':')[0];
-				const durationSeconds = durationBlock.split(':')[1];
-				const duration = (+durationMinutes * 60) + +durationSeconds;
 
 				if (!btn.querySelector('.download-link')) {
 					const self = this;
-					const audioTitle = audioBlock.querySelector('.audio_row__title_inner').innerText;
-					const audioArtist = audioBlock.querySelector('.audio_row__performers').innerText;
-					const audioName = audioArtist + "-" + audioTitle;
-					const audioFullName = audioName.replace(/(<([^>]+)>)|([<>:"\/\\|?*.])/ig, '');
-					const options = {id: audioId, title: audioFullName, duration};
+					const options = this.getAudioBlockOptions(audioBlock);
 
 					audioBlock.addEventListener(
 						'mouseover',
@@ -220,20 +229,34 @@ class Audio extends vkObserver {
 
 	}
 
+	getAllAudios(event) {
+		event.preventDefault();
+		const btn = event.target
+		const item = btn.parentNode;
+		const isFetching = btn.getAttribute('data-fetching');
+		const notFetchedAudioRows = item.querySelectorAll('.audio_row:not([data-fetched]):not([data-fetching])')
+		
+		if (isFetching || notFetchedAudioRows.length === 0) return
+
+		btn.setAttribute('data-fetching', true)
+
+		Promise.all([].slice.call(notFetchedAudioRows).map(audioBlock => {
+			const options = this.getAudioBlockOptions(audioBlock);
+			return this.setAudioUrl(audioBlock, options)
+				.then(() => {
+					const downloadBtn = audioBlock.querySelector('.download-link')
+					downloadBtn && downloadBtn.click()
+				})
+		}))
+		.then(() => btn.removeAttribute('data-fetching'))
+		.catch(() => btn.removeAttribute('data-fetching'))
+	}
+
 	getA(entries) {
 		let posts = entries || document.querySelectorAll('.post');
 		posts = [].slice.call(posts);
-		
-		const getAllAudios = event => {
-			event.preventDefault();
-			const item = event.target.parentNode;
 
-			for (let z = 0; z < item.querySelectorAll('.audio_row').length; z++) {
-				item.querySelectorAll('.download-link')[z].click();
-			}
-		}
-
-		posts.forEach( (post) => {
+		posts.forEach((post) => {
 			let wallText = post.querySelector('.wall_text');
 
 			if(wallText === null) {
@@ -243,11 +266,16 @@ class Audio extends vkObserver {
 			if (post !== undefined && post !== null) {
 				if (wallText.querySelectorAll('.audio_row').length > 1) {
 					const btn = document.createElement('a');
+					const btnHTML = `Загрузить все
+						<span class="download-tooltip">
+							Нажмите, чтобы загрузить все аудиозаписи
+						</span>
+					`
 
 					btn.href = '#';
 					btn.className = 'download-all-link';
-					btn.innerHTML = 'Загрузить все<span class="download-tooltip">Нажмите, чтобы загрузить все аудиозаписи</span>';
-					btn.addEventListener('click', getAllAudios, false);
+					btn.innerHTML = btnHTML;
+					btn.addEventListener('click', this.getAllAudios, false);
 
 					if (!post.querySelector('.download-all-link')) {
 						wallText.appendChild(btn);
