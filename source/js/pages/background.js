@@ -1,29 +1,23 @@
-// let tabId;
-//
-// chrome.runtime.onMessage.addListener(
-//   (request, sender, sendResponse) => {
-//     if (request.query === 'getvideo') {
-//     	chrome.downloads.download({
-//             url: request.url,
-//             filename: request.name + '.mp4'
-//         }, (id) => {
-//         	tabId = sender.tab.id;
-//         	//console.info("started video " + id, tabId);
-//         	sendResponse({message: "started '" + request.name + "'' video with id" + id});
-//         });
-//         return true;
-//     }
-// });
-//
-// chrome.downloads.onChanged.addListener((details) => {
-//    	if(details.state && details.state.current == "complete"){
-//   		chrome.tabs.sendMessage(
-//   		tabId,
-//   		{query: 'downloadvideo', details: details}, (response) => {
-//     		//console.log(response);
-//   		});
-//    	}
-// });
+const storage = chrome.storage.sync;
+
+chrome.tabs.onUpdated.addListener((tabId, { status, url }, tab) => {
+  if (status && url && url.match(/\/login/g)) {
+    storage.set({notifyLogin: true});
+  }
+
+  storage.get('notifyLogin', ({notifyLogin}) => {
+    if (typeof notifyLogin === undefined) {
+      storage.set({notifyLogin: false})
+    }
+
+    if (notifyLogin && !tab.url.match(/\/login/g)) {
+      chrome.tabs.sendMessage(tabId, {query: 'relogin', details: notifyLogin});
+      storage.set({notifyLogin: false})
+    }
+  })
+  
+})
+
 chrome.runtime.onMessage.addListener((request) => {
   const {id, videoSrc, videoTitle} = request;
   const nameChunks = videoSrc.split('.');

@@ -4,23 +4,7 @@ import { xhr, decodeURL } from '../utils';
 class Audio extends vkObserver {
 	constructor() {
 		super();
-		this.id = null;
 		this.getAllAudios = this.getAllAudios.bind(this);
-	}
-
-	getUserId() {
-		const pattern = new RegExp('queue_connection_events_queue', 'gi');
-
-		if (!this.id) {
-			for (let key in localStorage) {
-				if (localStorage.hasOwnProperty(key) && key.match(pattern)) {
-					this.id = key.replace(/\D+/g, '');
-					break;
-				}
-			}
-		}
-
-		return this.id;
 	}
 
 	getBlob(event) {
@@ -136,13 +120,14 @@ class Audio extends vkObserver {
 			body: form
 		})
 		.then(response => {
+			const userId = localStorage.getItem('VK_OBSERVER_ID')
 			const filteredUrls = response.result
 									.split(',')
 									.filter(item => item.indexOf('mp3') >= 0);
 						
 			const cleanUrl = filteredUrls[0].replace(/^"(.+(?="$))"$/, '$1');
 		
-			return decodeURL(cleanUrl, this.getUserId());
+			return decodeURL(cleanUrl, userId);
 		})
 		.then(url => {
 			let error = false;
