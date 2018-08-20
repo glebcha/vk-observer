@@ -13,7 +13,7 @@ let saveOption = (value) => {
 let saveLastKeys = (defaultKeys) => {
     storage.set({'lastkeys': defaultKeys}, () => {
         chrome.tabs.query({'url': '*://vk.com/*'}, (tabs) => {
-            tabs.forEach( (tab) => {
+            tabs.forEach( (tab, k) => {
                 chrome.tabs.executeScript(tabs[k].id, {file: "js/vk-observer.js"});
             })
         });
@@ -21,14 +21,14 @@ let saveLastKeys = (defaultKeys) => {
 };
 
 let getOption = () => {
-    let toggleCache = document.querySelector('.toggle-cache'),
-        toggleBitrate = document.querySelector('.toggle-bitrate'),
+    // let toggleCache = document.querySelector('.toggle-cache'),
+    let toggleBitrate = document.querySelector('.toggle-bitrate'),
         toggleScrobble = document.querySelector('.toggle-scrobble');
     storage.get('settings', (data) => {
         let state = data.settings,
             defaultSettings = {
                 "bitrate": 'enabled',
-                "cache": 'enabled',
+                // "cache": 'enabled',
                 "scrobble": 'disabled'
             };
 
@@ -36,12 +36,12 @@ let getOption = () => {
             storage.clear();
             saveOption(defaultSettings);
         }
-        if (state.cache === 'enabled') {
-            toggleCache.checked = true;
-        }
-        if (state.cache === 'disabled') {
-            toggleCache.checked = false;
-        }
+        // if (state.cache === 'enabled') {
+        //     toggleCache.checked = true;
+        // }
+        // if (state.cache === 'disabled') {
+        //     toggleCache.checked = false;
+        // }
         if (state.bitrate === 'enabled') {
             toggleBitrate.checked = true;
         }
@@ -71,62 +71,62 @@ let getOption = () => {
 };
 
 window.onload = () => {
-    let switcherCache = document.querySelector('.switcher-cache'),
-        toggleCache = document.querySelector('.toggle-cache'),
-        switcherBitrate = document.querySelector('.switcher-bitrate'),
+    // let switcherCache = document.querySelector('.switcher-cache'),
+        // toggleCache = document.querySelector('.toggle-cache'),
+    let switcherBitrate = document.querySelector('.switcher-bitrate'),
         toggleBitrate = document.querySelector('.toggle-bitrate'),
         switcherScrobble = document.querySelector('.switcher-scrobble'),
         toggleScrobble = document.querySelector('.toggle-scrobble');
 
-    let changeCache = (event) => {
-        let bitrateStatus = '',
-            scrobbleStatus = '';
+    // let changeCache = (event) => {
+    //     let bitrateStatus = '',
+    //         scrobbleStatus = '';
 
-        bitrateStatus = toggleBitrate.checked ? 'enabled' : 'disabled';
+    //     bitrateStatus = toggleBitrate.checked ? 'enabled' : 'disabled';
+    //     scrobbleStatus = toggleScrobble.checked ? 'enabled' : 'disabled';
+
+    //     storage.get('settings', (data) => {
+    //         let state = data.settings,
+    //             options = {
+    //                 bitrate: bitrateStatus,
+    //                 cache: 'enabled',
+    //                 scrobble: scrobbleStatus
+    //             };
+    //         toggleCache.checked = true;
+    //         if (state.cache === 'enabled') {
+    //             toggleCache.checked = false;
+    //             options.cache = 'disabled';
+    //         }
+    //         saveOption(options);
+    //     });
+    // };
+
+    let changeBitrate = (event) => {
+        // let cacheStatus = '',
+        let scrobbleStatus = '';
+
+        // cacheStatus = toggleCache.checked ? 'enabled' : 'disabled';
         scrobbleStatus = toggleScrobble.checked ? 'enabled' : 'disabled';
 
-        storage.get('settings', (data) => {
-            let state = data.settings,
+        storage.get('settings', function(data) {
+            var state = data.settings,
                 options = {
-                    bitrate: bitrateStatus,
-                    cache: 'enabled',
-                    scrobble: scrobbleStatus
+                    "bitrate": 'enabled',
+                    // "cache": cacheStatus,
+                    "scrobble": scrobbleStatus
                 };
-            toggleCache.checked = true;
-            if (state.cache === 'enabled') {
-                toggleCache.checked = false;
-                options.cache = 'disabled';
+            toggleBitrate.checked = true;
+            if (state.bitrate === 'enabled') {
+                toggleBitrate.checked = false;
+                options.bitrate = 'disabled';
             }
             saveOption(options);
         });
     };
 
-    let changeBitrate = (event) => {
-        // let cacheStatus = '',
-        //     scrobbleStatus = '';
-
-        // cacheStatus = toggleCache.checked ? 'enabled' : 'disabled';
-        // scrobbleStatus = toggleScrobble.checked ? 'enabled' : 'disabled';
-
-        // storage.get('settings', function(data) {
-        //     var state = data.settings,
-        //         options = {
-        //             "bitrate": 'enabled',
-        //             "cache": cacheStatus,
-        //             "scrobble": scrobbleStatus
-        //         };
-        //     toggleBitrate.checked = true;
-        //     if (state.bitrate === 'enabled') {
-        //         toggleBitrate.checked = false;
-        //         options.bitrate = 'disabled';
-        //     }
-        //     saveOption(options);
-        // });
-    };
-
     let changeScrobble = (event) => {
-        let cacheStatus = '',
-            bitrateStatus = '';
+        // let cacheStatus = '',
+        let bitrateStatus = '';
 
         // cacheStatus = toggleCache.checked ? 'enabled' : 'disabled';
         bitrateStatus = toggleBitrate.checked ? 'enabled' : 'disabled';
@@ -163,7 +163,7 @@ window.onload = () => {
     };
 
     getOption();
-    switcherCache.addEventListener('click', changeCache, false);
+    // switcherCache.addEventListener('click', changeCache, false);
     switcherBitrate.addEventListener('click', changeBitrate, false);
     switcherScrobble.addEventListener('click', changeScrobble, false);
 }
