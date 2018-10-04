@@ -16,6 +16,14 @@ export function declension(integer, titles, highlight=true, isFull=true) {
             `${ text }`
 }
 
+export function getJSON(str) {
+    try {
+        return JSON.parse(str)
+    } catch(err) {
+        return {}
+    }
+}
+
 export function hash() {
     return Math.random().toString(16).slice(2, 10)
 }
