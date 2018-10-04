@@ -1,5 +1,5 @@
 import vkObserver from './main';
-import { xhr, decodeURL } from '../utils';
+import { xhr, decodeURL, getJSON } from '../utils';
 
 class Audio extends vkObserver {
 	constructor() {
@@ -98,7 +98,7 @@ class Audio extends vkObserver {
 	}
 
 	setAudioUrl(target, options) {
-		const { id, title, duration } = options;
+		const { id, title, duration, userId, extensionId } = options;
 		const isError = target.getAttribute('data-fetch-error');
 		const isFetching = target.getAttribute('data-fetching');
 		const downloadBtn = target.querySelector('.download-link');
@@ -112,7 +112,7 @@ class Audio extends vkObserver {
 		
 		form.append('act', 'reload_audio');
 		form.append('al', '1');
-		form.append('ids', id);
+		form.append('ids', `${id}${extensionId ? `_${extensionId}` : ''}`);
 					
 		return xhr({
 			url: 'https://vk.com/al_audio.php',
@@ -120,13 +120,12 @@ class Audio extends vkObserver {
 			body: form
 		})
 		.then(response => {
-			const userId = localStorage.getItem('VK_OBSERVER_ID')
 			const filteredUrls = response.result
 									.split(',')
 									.filter(item => item.indexOf('mp3') >= 0);
 						
 			const cleanUrl = filteredUrls[0].replace(/^"(.+(?="$))"$/, '$1');
-		
+
 			return decodeURL(cleanUrl, userId);
 		})
 		.then(url => {
@@ -164,20 +163,26 @@ class Audio extends vkObserver {
 	}
 
 	getAudioBlockOptions(audioBlock) {
-		const audioId = audioBlock.getAttribute('data-full-id');
+		const audioData = getJSON(audioBlock.getAttribute('data-audio'));
+		const {
+			content_id, 
+			duration, 
+			vk_id
+		} = audioData.find(el => el && [].toString.call(el) === "[object Object]")
+		const extensionData = audioData.find(el => el && [].toString.call(el) === "[object String]" && el.match(/\/\//g))
+		const extensionId = extensionData && extensionData.split('//')[1]
 		const audioTitle = audioBlock.querySelector('.audio_row__title_inner').innerText;
 		const audioArtist = audioBlock.querySelector('.audio_row__performers').innerText;
 		const audioName = audioArtist + "-" + audioTitle;
 		const audioFullName = audioName.replace(/(<([^>]+)>)|([<>:"\/\\|?*.])/ig, '');
-		
-		const durationBlock = audioBlock.querySelector('.audio_row__duration').innerText;
-		const durationMinutes = durationBlock.split(':')[0];
-		const durationSeconds = durationBlock.split(':')[1];
-		const duration = (+durationMinutes * 60) + +durationSeconds;
 
-		const options = {id: audioId, title: audioFullName, duration};
-
-		return options;
+		return {
+			id: content_id, 
+			title: audioFullName, 
+			userId: vk_id,
+			duration,
+			extensionId,
+		};
 	}
 
 	showA(audios) {
