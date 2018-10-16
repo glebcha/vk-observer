@@ -112,7 +112,7 @@ class Audio extends vkObserver {
 		
 		form.append('act', 'reload_audio');
 		form.append('al', '1');
-		form.append('ids', `${id}${extensionId ? `_${extensionId}` : ''}`);
+		form.append('ids', extensionId);
 					
 		return xhr({
 			url: 'https://vk.com/al_audio.php',
@@ -162,15 +162,36 @@ class Audio extends vkObserver {
 		})
 	}
 
-	getAudioBlockOptions(audioBlock) {
-		const audioData = getJSON(audioBlock.getAttribute('data-audio'));
+	getAudioExtra(audioData) {
 		const {
 			content_id, 
 			duration, 
 			vk_id
 		} = audioData.find(el => el && [].toString.call(el) === "[object Object]")
-		const extensionData = audioData.find(el => el && [].toString.call(el) === "[object String]" && el.match(/\/\//g))
-		const extensionId = extensionData && extensionData.split('//')[1]
+		const extensions = audioData.filter(el => el && [].toString.call(el) === "[object String]" && !el.match(/http?s/g) && el.match(/\/\//g))
+		const extensionDatas = extensions.length && 
+			extensions[0]
+			.split('/')
+			.map(item => item.replace('/', ''))
+			.filter(item => item.length > 0) 
+		const extensionId = `${content_id}_${extensionDatas[2]}_${extensionDatas[extensionDatas.length - 1]}, ${content_id}`
+
+		return {
+			extensionId,
+			content_id, 
+			duration, 
+			vk_id,
+		}
+	}
+
+	getAudioBlockOptions(audioBlock) {
+		const audioData = getJSON(audioBlock.getAttribute('data-audio'));
+		const {
+			extensionId,
+			content_id, 
+			duration, 
+			vk_id,
+		} = this.getAudioExtra(audioData)
 		const audioTitle = audioBlock.querySelector('.audio_row__title_inner').innerText;
 		const audioArtist = audioBlock.querySelector('.audio_row__performers').innerText;
 		const audioName = audioArtist + "-" + audioTitle;
